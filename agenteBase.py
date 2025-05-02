@@ -45,7 +45,7 @@ class AgenteBase(ABC):
         for j in range(-1, 2):
             for k in range(-1, 2):
                 if (j != 0 or k != 0): #Não pegar o elemento do meio
-                    aux = ambiente.pegarElemento(j + self.x, k + self.y)
+                    aux = ambiente.getElemento(j + self.x, k + self.y)
                     if aux != None:
                         visao.append(aux)    
         return visao 

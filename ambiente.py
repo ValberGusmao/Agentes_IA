@@ -16,7 +16,7 @@ class Ambiente:
             mapa.append(linha)
         return mapa
 
-    def pegarElemento(self, x:int, y:int):
+    def getElemento(self, x:int, y:int):
         if (0 <= x < self.largura) and (0 <= y < self.altura):
             return (x, y, self.mapa[x][y])
         else:
