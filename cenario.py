@@ -41,7 +41,7 @@ COLOR_MAP = {
     BASE: (0, 0, 255),                # azul
     CRYSTAL: (0, 255, 0),             # verde
     METAL: (255, 255, 0),             # amarelo
-   # STRUCTURE: (255, 0, 0)            # vermelho
+    STRUCTURE: (255, 0, 0)            # vermelho
 }
 
 #parametros do ambiente - pygame
