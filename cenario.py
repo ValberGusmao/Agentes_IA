@@ -124,7 +124,8 @@ while rodando:
     tela.fill((0, 0, 0))
     desenhar_grid(tela, grid)
     pygame.display.flip()
-
+    
+    pygame.time.Clock().tick(30)  # Limita o FPS a 30
 pygame.quit()
 
 
