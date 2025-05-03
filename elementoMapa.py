@@ -13,8 +13,8 @@ class ElementoMapa():
     def adicionarEntidade(self, entidade):
         self.entidade.append(entidade)
 
-    def adicionarRecurso(self, recurso):
-        self.terreno = recurso
+    def posicionarElemento(self, elemento):
+        self.terreno = elemento
 
     def coletarRecurso(self):
         valor = self.terreno.value.valor

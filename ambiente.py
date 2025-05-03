@@ -1,10 +1,12 @@
 from elementoMapa import ElementoMapa
+from tipoTerreno import Tipo 
 
 class Ambiente:
     def __init__(self, largura, altura):
         self.mapa = self.criarMapa(largura, altura)
         self.largura = largura
         self.altura = altura
+        self.basePosicionada:bool = False
         self.entidades = [] #Entidades são elementos que podem se mover pelo mapa
     
     #Entidade != Estrutura/Terreno
@@ -21,8 +23,7 @@ class Ambiente:
     def getElemento(self, x:int, y:int):
         if self.posValida(x, y):
             return (x, y, self.mapa[x][y])
-        else:
-            raise ValueError(f"Posição ({x}, {y}) inválida no mapa.")
+        return None
     
     def adicionarEntidade(self, x, y, entidade):
         if self.posValida(x, y):
@@ -34,9 +35,19 @@ class Ambiente:
         if self.posValida(x, y):
             self.mapa[entidade.x][entidade.y].moverEntidade(entidade, self.mapa[x][y])
 
+    def adicionarBase(self, x, y):
+        if self.posValida(x, y):
+            if not self.basePosicionada:
+                self.mapa[x][y].posicionarElemento(Tipo.BASE)
+                self.basePosicionada = True
+            else:
+                raise ValueError("Já há uma base posicionada nesse ambiente.")
+        else:
+            raise ValueError(f"Posição ({x}, {y}) inválida para adicionar Base.")
+
     def adicionarRecurso(self, x, y, recurso):
         if self.posValida(x, y):
-            self.mapa[x][y].adicionarRecurso(recurso)
+            self.mapa[x][y].posicionarElemento(recurso)
         else:
             raise ValueError(f"Posição ({x}, {y}) inválida para adicionar recurso.")
 

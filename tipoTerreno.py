@@ -11,6 +11,7 @@ class Terreno():
 class Tipo(Enum):
     RIO = Terreno('~', -20)
     LIVRE = Terreno('.', 0)
+    BASE = Terreno('@', 0)
     CRISTAL = Terreno('*', 10)
-    METAL = Terreno('#', 20)
-    ESTRUTURA = Terreno('@', 50)
+    METAL = Terreno('!', 20)
+    ESTRUTURA = Terreno('#', 50)

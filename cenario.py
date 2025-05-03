@@ -1,47 +1,21 @@
-'''class Cenario:
-    mapa = []
-
-    def cria_mapa(self, tamX, TamY):
-        
-        for linha in range(TamY):
-            linha = []
-            for coluna in range(tamX):
-                linha.append(0)
-            self.mapa.append(linha)
-        self.printMapa()
-
-    def printMapa(self):
-        for linha in self.mapa:
-            print(linha)
-'''
-
 import random
 import pygame
-
-#constantes do ambiente
-TERRAIN_FREE = '.'
-OBSTACLE = '#'
-BASE = 'B'
-CRYSTAL = 'C'
-METAL = 'M'
-STRUCTURE = 'S'
+from tipoTerreno import Tipo 
+from ambiente import Ambiente
+from agenteBase import AgenteBase
 
 #parametros do ambiente
 GRID_ROWS = 50
 GRID_COLS = 50
-NUM_OBSTACLES = 15
-NUM_CRYSTALS = 5
-NUM_METALS = 4
-NUM_STRUCTURES = 2
 
 #cores pygame
 COLOR_MAP = {
-    TERRAIN_FREE: (255, 255, 255),    # branco
-    OBSTACLE: (80, 80, 80),           # cinza escuro
-    BASE: (0, 0, 255),                # azul
-    CRYSTAL: (0, 255, 0),             # verde
-    METAL: (255, 255, 0),             # amarelo
-    STRUCTURE: (255, 0, 0)            # vermelho
+    Tipo.LIVRE:     (255, 255, 255),       # branco
+    Tipo.RIO:       (000, 255, 255),       # ciano
+    Tipo.BASE:      (255, 255, 000),       # amarelo
+    Tipo.CRISTAL:   (255, 000, 255),       # Roxo
+    Tipo.METAL:     (111, 111, 111),       # cinza
+    Tipo.ESTRUTURA: (255, 000, 000)        # vermelho
 }
 
 #parametros do ambiente - pygame
@@ -49,65 +23,49 @@ CELL_SIZE = 16  #pixels
 WINDOW_WIDTH = GRID_COLS * CELL_SIZE
 WINDOW_HEIGHT = GRID_ROWS * CELL_SIZE
 
-
-def criar_grid(rows, cols):
-    grid = []
-    for _ in range(rows):
-        linha = []
-        for _ in range(cols):
-            linha.append(TERRAIN_FREE)
-        grid.append(linha)
-    return grid
-
-
-def posicionar_base(grid):
-    centro_linha = len(grid) // 2
-    centro_coluna = len(grid[0]) // 2
-    grid[centro_linha][centro_coluna] = BASE
-    return (centro_linha, centro_coluna) #retorna os indices
-
-
-def posicionar_elementos(grid, elemento, quantidade):
-    linhas = len(grid)
-    colunas = len(grid[0])
+def preencherMapa(ambiente, elemento, quantidade):
     count = 0
     while count < quantidade:
-        i = random.randint(0, linhas - 1)
-        j = random.randint(0, colunas - 1)
-        if grid[i][j] == TERRAIN_FREE:
-            grid[i][j] = elemento
+        i = random.randint(0, ambiente.largura - 1)
+        j = random.randint(0, ambiente.altura - 1)
+        if ambiente.mapa[i][j].terreno == Tipo.LIVRE:
+            ambiente.mapa[i][j].posicionarElemento(elemento)
             count += 1
 
-
-def exibir_grid(grid):
-    for linha in grid:
-        print(' '.join(linha))
-    print()
-
-
 #pygame
-def desenhar_grid(tela, grid):
-    for i, linha in enumerate(grid):
-        for j, celula in enumerate(linha):
-            if celula in COLOR_MAP:
-                cor = COLOR_MAP[celula]
-            else:
-                cor = (0, 0, 0)  # cor preta padrão
+def desenhar_grid(tela, ambiente):
+    for i in range(len(ambiente.mapa)):
+        for j in range(len(ambiente.mapa[0])):
+            eleMapa = ambiente.mapa[i][j]
+            terreno = eleMapa.terreno
 
+            if terreno in COLOR_MAP:
+                cor = COLOR_MAP[terreno]
+            else:
+                cor = (0, 0, 0)
+
+            if eleMapa.entidade != []:
+                cor = COLOR_MAP[str(eleMapa)]
             pygame.draw.rect(tela, cor, (j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE)) #posicao
             pygame.draw.rect(tela, (200, 200, 200), (j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE), 1)  #contorno do grid
 
 
 #criando ambiente
-grid = criar_grid(GRID_ROWS, GRID_COLS)
-posicionar_base(grid)
-posicionar_elementos(grid, OBSTACLE, NUM_OBSTACLES)
-posicionar_elementos(grid, CRYSTAL, NUM_CRYSTALS)
-posicionar_elementos(grid, METAL, NUM_METALS)
-posicionar_elementos(grid, STRUCTURE, NUM_STRUCTURES)
+grid = Ambiente(GRID_ROWS, GRID_COLS)
+agente = AgenteBase('A', GRID_ROWS//2, GRID_COLS//2)
+grid.adicionarEntidade(agente.x, agente.y, agente)
+
+# Adicionando um novo tipo de terreno ao enum Tipo
+COLOR_MAP[agente.simbolo] = (34, 139, 34)  # verde floresta
+
+grid.adicionarBase(GRID_ROWS//2, GRID_COLS//2)
+preencherMapa(grid, Tipo.RIO, 30)
+preencherMapa(grid, Tipo.CRISTAL, 20)
+preencherMapa(grid, Tipo.METAL, 10)
+preencherMapa(grid, Tipo.ESTRUTURA, 3)
 
 #exibido a matriz
-exibir_grid(grid)
+grid.printMapa()
 
 #iniciar pygame
 pygame.init()
@@ -120,6 +78,10 @@ while rodando:
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             rodando = False
+        if evento.type == pygame.KEYDOWN and evento.key == pygame.K_RETURN:
+            agente.explorar(grid)
+        if pygame.key.get_pressed()[pygame.K_SPACE]:
+            agente.explorar(grid)
 
     tela.fill((0, 0, 0))
     desenhar_grid(tela, grid)
@@ -127,5 +89,3 @@ while rodando:
     
     pygame.time.Clock().tick(30)  # Limita o FPS a 30
 pygame.quit()
-
-
