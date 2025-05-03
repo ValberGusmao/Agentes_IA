@@ -1,3 +1,5 @@
+import random
+
 from elementoMapa import ElementoMapa
 from tipoTerreno import Tipo 
 
@@ -25,7 +27,9 @@ class Ambiente:
             return (x, y, self.mapa[x][y])
         return None
     
-    def adicionarEntidade(self, x, y, entidade):
+    def adicionarEntidade(self, entidade):
+        x = entidade.x
+        y = entidade.y
         if self.posValida(x, y):
             self.mapa[x][y].adicionarEntidade(entidade)
         else:
@@ -44,6 +48,15 @@ class Ambiente:
                 raise ValueError("Já há uma base posicionada nesse ambiente.")
         else:
             raise ValueError(f"Posição ({x}, {y}) inválida para adicionar Base.")
+
+    def preencherMapa(self, elemento, quantidade):
+        count = 0
+        while count < quantidade:
+            i = random.randint(0, self.largura - 1)
+            j = random.randint(0, self.altura - 1)
+            if self.mapa[i][j].terreno == Tipo.LIVRE:
+                self.mapa[i][j].posicionarElemento(elemento)
+                count += 1
 
     def adicionarRecurso(self, x, y, recurso):
         if self.posValida(x, y):

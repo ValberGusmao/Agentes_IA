@@ -3,16 +3,21 @@ from tipoTerreno import *
 class ElementoMapa():
     def __init__(self, terreno:Tipo = Tipo.LIVRE):
         self.terreno = terreno
-        self.entidade = []
+        self.entidades = []
 
     def __str__(self):
-        if self.entidade:
-            return str(self.entidade[0])
+        if self.entidades:
+            return str(self.entidades[0])
         return str(self.terreno.value)
     
-    def adicionarEntidade(self, entidade):
-        self.entidade.append(entidade)
+    def getElemento(self):
+        if self.entidades:
+            return self.entidades[0]
+        return self.terreno
 
+    def adicionarEntidade(self, entidade):
+        if entidade not in self.entidades:
+            self.entidades.append(entidade)
     def posicionarElemento(self, elemento):
         self.terreno = elemento
 
@@ -24,5 +29,6 @@ class ElementoMapa():
         return 0
     
     def moverEntidade(self, ent, proximaPosicao: 'ElementoMapa'):        
-        proximaPosicao.entidade.append(ent)
-        self.entidade.remove(ent)
+        proximaPosicao.entidades.append(ent)
+        # if ent in self.entidades:
+        self.entidades.remove(ent)
