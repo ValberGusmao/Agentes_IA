@@ -3,21 +3,27 @@ import random
 
 class AgenteBase(ABC):
 
-    def __init__(self, x, y):
+    def __init__(self, simbolo:str, x, y):
         super().__init__()
+        self.simbolo = simbolo
         self.x = x
         self.y = y
+
+    def __str__(self):
+        return self.simbolo
     
     def explorar(self, ambiente):
         visao = self.verAmbiente(ambiente)
         novaPos = self.movimentacao(visao)
+        ambiente.moverEntidade(novaPos[0], novaPos[1], self)
         self.x, self.y = novaPos
         print((self.x, self.y))
     
     def movimentacao(self, visao):
         maior = 0
         opcoes = []
-        for (x, y, valor) in visao:
+        for (x, y, elementoMapa) in visao:
+            valor = elementoMapa.terreno.value.valor
             if valor > maior:
                 maior = valor
                 pos = (x, y)

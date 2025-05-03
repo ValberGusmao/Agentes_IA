@@ -27,8 +27,8 @@ METAL = 'M'
 STRUCTURE = 'S'
 
 #parametros do ambiente
-GRID_ROWS = 10
-GRID_COLS = 10
+GRID_ROWS = 50
+GRID_COLS = 50
 NUM_OBSTACLES = 15
 NUM_CRYSTALS = 5
 NUM_METALS = 4
@@ -45,7 +45,7 @@ COLOR_MAP = {
 }
 
 #parametros do ambiente - pygame
-CELL_SIZE = 50  #pixels
+CELL_SIZE = 16  #pixels
 WINDOW_WIDTH = GRID_COLS * CELL_SIZE
 WINDOW_HEIGHT = GRID_ROWS * CELL_SIZE
 
