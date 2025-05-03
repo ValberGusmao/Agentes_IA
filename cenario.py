@@ -5,8 +5,8 @@ from ambiente import Ambiente
 from agenteBase import AgenteBase
 
 #parametros do ambiente
-GRID_ROWS = 50
-GRID_COLS = 50
+GRID_ROWS = 10
+GRID_COLS = 10
 
 #cores pygame
 COLOR_MAP = {
@@ -59,9 +59,9 @@ grid.adicionarEntidade(agente.x, agente.y, agente)
 COLOR_MAP[agente.simbolo] = (34, 139, 34)  # verde floresta
 
 grid.adicionarBase(GRID_ROWS//2, GRID_COLS//2)
-preencherMapa(grid, Tipo.RIO, 30)
-preencherMapa(grid, Tipo.CRISTAL, 20)
-preencherMapa(grid, Tipo.METAL, 10)
+preencherMapa(grid, Tipo.RIO, 0)
+preencherMapa(grid, Tipo.CRISTAL, 15)
+preencherMapa(grid, Tipo.METAL, 2)
 preencherMapa(grid, Tipo.ESTRUTURA, 3)
 
 #exibido a matriz

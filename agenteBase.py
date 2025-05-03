@@ -34,9 +34,11 @@ class AgenteBase(ABC):
                 opcoes.append((x, y))
         
         if maior != 0:
-            print("Recurso")
-            opcoes = [(pos[0], self.y), (self.x, pos[1])]
-            return self.escolherAleatorio(opcoes)
+             #O recurso tá na diagonal. É agente tem que escolher entre duas opções em linha reta
+            if self.x - pos[0] != 0 and self.y - pos[1] != 0:
+                opcoes = [(pos[0], self.y), (self.x, pos[1])]
+                return self.escolherAleatorio(opcoes)
+            return pos
         else:
             res = self.escolherAleatorio(opcoes)
             return (res[0], res[1])
@@ -61,6 +63,7 @@ class AgenteBase(ABC):
 
     def coletarRecurso(self, ambiente):
         self.carga = ambiente.removerRecurso(self.x, self.y)
+        print("Recurso Coletado")
 
     # Agente
     #     AgenteSimples
