@@ -1,19 +1,4 @@
-from enum import Enum
-
-class Terreno():
-    def __init__(self, simbolo:str, valor):
-        self.simbolo = simbolo
-        self.valor = valor
-    
-    def __str__(self):
-        return self.simbolo
-
-class Tipo(Enum):
-    RIO = Terreno('~', -20)
-    LIVRE = Terreno('.', 0)
-    CRISTAL = Terreno('*', 10)
-    METAL = Terreno('#', 20)
-    ESTRUTURA = Terreno('@', 50)
+from tipoTerreno import *
     
 class ElementoMapa():
     def __init__(self, terreno:Tipo = Tipo.LIVRE):
@@ -31,9 +16,13 @@ class ElementoMapa():
     def adicionarRecurso(self, recurso):
         self.terreno = recurso
 
-    def coletarRecurso(self, entidades):
-        self.recurso = None
-
+    def coletarRecurso(self):
+        valor = self.terreno.value.valor
+        if valor > 0:
+            self.terreno = Tipo.LIVRE
+            return valor
+        return 0
+    
     def moverEntidade(self, ent, proximaPosicao: 'ElementoMapa'):        
         proximaPosicao.entidade.append(ent)
         self.entidade.remove(ent)

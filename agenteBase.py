@@ -8,16 +8,19 @@ class AgenteBase(ABC):
         self.simbolo = simbolo
         self.x = x
         self.y = y
+        self.carga = 0
 
     def __str__(self):
         return self.simbolo
     
     def explorar(self, ambiente):
-        visao = self.verAmbiente(ambiente)
-        novaPos = self.movimentacao(visao)
-        ambiente.moverEntidade(novaPos[0], novaPos[1], self)
-        self.x, self.y = novaPos
-        print((self.x, self.y))
+        if ambiente.getElemento(self.x, self.y)[2].terreno.value.valor > 0:
+            self.coletarRecurso(ambiente)
+        else:
+            visao = self.verAmbiente(ambiente)
+            novaPos = self.movimentacao(visao)
+            ambiente.moverEntidade(novaPos[0], novaPos[1], self)
+            self.x, self.y = novaPos
     
     def movimentacao(self, visao):
         maior = 0
@@ -57,7 +60,7 @@ class AgenteBase(ABC):
         return visao 
 
     def coletarRecurso(self, ambiente):
-        elementoMapa = ambiente.pegarElemento(self.x, self.y)
+        self.carga = ambiente.removerRecurso(self.x, self.y)
 
     # Agente
     #     AgenteSimples

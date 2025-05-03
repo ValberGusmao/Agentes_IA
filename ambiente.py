@@ -30,15 +30,21 @@ class Ambiente:
         else:
             raise ValueError(f"Posição ({x}, {y}) inválida para adicionar entidade.")
     
+    def moverEntidade(self, x, y, entidade):
+        if self.posValida(x, y):
+            self.mapa[entidade.x][entidade.y].moverEntidade(entidade, self.mapa[x][y])
+
     def adicionarRecurso(self, x, y, recurso):
         if self.posValida(x, y):
             self.mapa[x][y].adicionarRecurso(recurso)
         else:
             raise ValueError(f"Posição ({x}, {y}) inválida para adicionar recurso.")
 
-    def moverEntidade(self, x, y, entidade):
+    def removerRecurso(self, x, y):
         if self.posValida(x, y):
-            self.mapa[entidade.x][entidade.y].moverEntidade(entidade, self.mapa[x][y])
+            return self.mapa[x][y].coletarRecurso()
+        else:
+            raise ValueError(f"Posição ({x}, {y}) inválida no mapa.")
 
     def posValida(self, x:int, y:int):
         return (0 <= x < self.largura) and (0 <= y < self.altura)
