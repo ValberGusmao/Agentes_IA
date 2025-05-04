@@ -61,7 +61,7 @@ class AgenteBase(ABC):
         if valor > 0:
             self.carga = valor
             print("Recurso Coletado")
-            self.estado = self.EstadosAgente.VOLTANDO_BASE
+            self.estado = self.EstadosAgente.ANDANDO
         elif valor == 0:
             print("Recurso Não encontrado")
             self.estado = self.EstadosAgente.ANDANDO

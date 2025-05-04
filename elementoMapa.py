@@ -23,7 +23,8 @@ class ElementoMapa():
 
     def coletarRecurso(self):
         valor = self.terreno.value.coletar()
-        self.terreno = valor[1]
+        if valor[0] > 0:
+            self.terreno = valor[1]
         return valor[0]
     
     def moverEntidade(self, ent, proximaPosicao: 'ElementoMapa'):        
