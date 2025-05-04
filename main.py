@@ -4,7 +4,7 @@ import pygame
 from view import View
 from tipoTerreno import Tipo
 from ambiente import Ambiente
-from agenteBase import AgenteBase
+from agenteReativoSimples import AgenteReativoSimples, AgenteBase
 
 #Responsável por unir todos os elementos
 class Simulacao:
@@ -56,8 +56,8 @@ if __name__ == "__main__":
     ambiente = Ambiente(20, 20)
     tela = View(ambiente.altura, ambiente.largura, 16)
 
-    agente = AgenteBase('A', ambiente.altura // 2, ambiente.largura // 2)
-    agenteB = AgenteBase('B', ambiente.altura // 2, ambiente.largura // 2)
+    agente = AgenteReativoSimples('A', ambiente.altura // 2, ambiente.largura // 2)
+    agenteB = AgenteReativoSimples('B', ambiente.altura // 2, ambiente.largura // 2)
     tela.adicionarElementoVisual(agente.simbolo, (34, 139, 34))
     tela.adicionarElementoVisual(agenteB.simbolo, (139, 34, 34))
 

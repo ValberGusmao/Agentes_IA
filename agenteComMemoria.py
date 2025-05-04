@@ -1,5 +1,5 @@
-from agenteBase import Agente
+from agenteBase import AgenteBase
 
-class AgenteComMemoria(Agente):
+class AgenteComMemoria(AgenteBase):
     def guardaMapa():
         pass 
