@@ -7,6 +7,18 @@ class Terreno():
     
     def __str__(self):
         return self.simbolo
+    
+    def coletar(self):
+        if self.valor > 0:
+            valor = self.valor
+            return (valor, Tipo.LIVRE)
+        return (0, self)
+
+class Estrutura(Terreno):
+    def coletar(self, entidades):
+        if (len(entidades) >= 2):
+            return super().coletar()
+        return 0
 
 class Tipo(Enum):
     RIO = Terreno('~', -20)

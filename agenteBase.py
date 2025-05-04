@@ -1,26 +1,37 @@
 from abc import ABC, abstractmethod
+from enum import Enum
 import random
 
 class AgenteBase(ABC):
 
+    class EstadosAgente(Enum):
+        ANDANDO = 1
+        COLETANDO = 2
+        VOLTANDO_BASE = 3
+
     def __init__(self, simbolo:str, x, y):
         super().__init__()
+
+        self.estado = self.EstadosAgente.ANDANDO
         self.simbolo = simbolo
+        self.carga = 0
         self.x = x
         self.y = y
-        self.carga = 0
 
     def __str__(self):
         return self.simbolo
     
     def explorar(self, ambiente):
-        if ambiente.getElemento(self.x, self.y)[2].terreno.value.valor > 0:
-            self.coletarRecurso(ambiente)
-        else:
+        if self.estado == self.EstadosAgente.ANDANDO:
             visao = self.verAmbiente(ambiente)
             novaPos = self.movimentacao(visao)
             ambiente.moverEntidade(novaPos[0], novaPos[1], self)
             self.x, self.y = novaPos
+        elif self.estado == self.EstadosAgente.COLETANDO:
+            #visao = self.verAmbiente(ambiente)
+            self.coletarRecurso(ambiente)
+        else: #VoltandoBase
+           self.voltarBase()
     
     def movimentacao(self, visao):
         maior = 0
@@ -34,11 +45,13 @@ class AgenteBase(ABC):
                 opcoes.append((x, y))
         
         if maior != 0:
-             #O recurso tá na diagonal. É agente tem que escolher entre duas opções em linha reta
+            #O recurso tá na diagonal. O agente tem que escolher entre duas opções em linha reta
             if self.x - pos[0] != 0 and self.y - pos[1] != 0:
                 opcoes = [(pos[0], self.y), (self.x, pos[1])]
                 return self.escolherAleatorio(opcoes)
-            return pos
+            else:
+                self.estado = self.EstadosAgente.COLETANDO
+                return pos
         else:
             res = self.escolherAleatorio(opcoes)
             return (res[0], res[1])
@@ -48,8 +61,9 @@ class AgenteBase(ABC):
             return random.choice(lista)
         return None
 
-    def voltarBase():
-        pass
+    def voltarBase(self):
+        print("VOLTANDO")
+        self.estado = self.EstadosAgente.ANDANDO
 
     def verAmbiente(self, ambiente):
         visao = []
@@ -62,8 +76,16 @@ class AgenteBase(ABC):
         return visao 
 
     def coletarRecurso(self, ambiente):
-        self.carga = ambiente.removerRecurso(self.x, self.y)
-        print("Recurso Coletado")
+        valor = ambiente.removerRecurso(self.x, self.y) 
+        if valor > 0:
+            self.carga = valor
+            print("Recurso Coletado")
+            self.estado = self.EstadosAgente.VOLTANDO_BASE
+        elif valor == 0:
+            print("Recurso Não encontrado")
+            self.estado = self.EstadosAgente.ANDANDO
+        else:
+            print("Extraindo Recurso")
 
     # Agente
     #     AgenteSimples

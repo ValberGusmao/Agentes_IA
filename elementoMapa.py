@@ -22,11 +22,9 @@ class ElementoMapa():
         self.terreno = elemento
 
     def coletarRecurso(self):
-        valor = self.terreno.value.valor
-        if valor > 0:
-            self.terreno = Tipo.LIVRE
-            return valor
-        return 0
+        valor = self.terreno.value.coletar()
+        self.terreno = valor[1]
+        return valor[0]
     
     def moverEntidade(self, ent, proximaPosicao: 'ElementoMapa'):        
         proximaPosicao.entidades.append(ent)
