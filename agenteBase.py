@@ -42,28 +42,62 @@ class AgenteBase(ABC):
             return random.choice(lista)
         return None
 
+    # def voltarBase(self, ambiente):
+    #     pos_base = ambiente.get_pos_base()
+
+    #     #anda um passo na direção da base
+    #     if self.x < pos_base[0]:
+    #         novo_x = self.x + 1
+    #     elif self.x > pos_base[0]:
+    #         novo_x = self.x - 1
+    #     else:
+    #         novo_x = self.x
+
+    #     if self.y < pos_base[1]:
+    #         novo_y = self.y + 1
+    #     elif self.y > pos_base[1]:
+    #         novo_y = self.y - 1
+    #     else:
+    #         novo_y = self.y
+
+    #     ambiente.moverEntidade(novo_x, novo_y, self)
+    #     self.x = novo_x
+    #     self.y = novo_y
+
+    #     # Chegou na base
+    #     if (self.x, self.y) == pos_base:
+    #         print(f"{self.simbolo} entregou recurso na base!")
+    #         self.carga = 0
+    #         self.estado = self.EstadosAgente.ANDANDO
+
     def voltarBase(self, ambiente):
         pos_base = ambiente.get_pos_base()
-
-        #anda um passo na direção da base
+        
+        # Move primeiro em x
         if self.x < pos_base[0]:
             novo_x = self.x + 1
+            novo_y = self.y
         elif self.x > pos_base[0]:
             novo_x = self.x - 1
-        else:
-            novo_x = self.x
-
-        if self.y < pos_base[1]:
-            novo_y = self.y + 1
-        elif self.y > pos_base[1]:
-            novo_y = self.y - 1
-        else:
             novo_y = self.y
-
-        ambiente.moverEntidade(novo_x, novo_y, self)
-        self.x = novo_x
-        self.y = novo_y
-
+        else:
+            # Depois move em y
+            if self.y < pos_base[1]:
+                novo_x = self.x
+                novo_y = self.y + 1
+            elif self.y > pos_base[1]:
+                novo_x = self.x
+                novo_y = self.y - 1
+            else:
+                # Já esta na base
+                novo_x, novo_y = self.x, self.y
+        
+        
+        if ambiente.posValida(novo_x, novo_y):
+            ambiente.moverEntidade(novo_x, novo_y, self)
+            self.x = novo_x
+            self.y = novo_y
+        
         # Chegou na base
         if (self.x, self.y) == pos_base:
             print(f"{self.simbolo} entregou recurso na base!")
