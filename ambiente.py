@@ -10,10 +10,11 @@ class Ambiente:
         self.altura = altura
         self.basePosicionada:bool = False
         self.entidades = [] #Entidades são elementos que podem se mover pelo mapa
-    
+        self.pos_base = None  # Armazena posição da base como tupla (x, y)
+
     #Entidade != Estrutura/Terreno
 
-    def criarMapa(self, tamX, tamY):
+    def ecriarMapa(self, tamX, tamY):
         mapa = []
         for li in range(tamX):
             linha = []
@@ -44,6 +45,7 @@ class Ambiente:
             if not self.basePosicionada:
                 self.mapa[x][y].posicionarElemento(Tipo.BASE)
                 self.basePosicionada = True
+                self.pos_base = (x, y)  # ← Aqui é onde armazenamos a posição da base
             else:
                 raise ValueError("Já há uma base posicionada nesse ambiente.")
         else:
@@ -76,3 +78,19 @@ class Ambiente:
     def printMapa(self):
         for linha in range(len(self.mapa)):
             print(" ".join(map(str, self.mapa[linha])))
+
+    def get_pos_base(self):
+        if self.basePosicionada and self.pos_base is not None:
+            return self.pos_base
+        else:
+            raise ValueError("A base ainda não foi posicionada.")
+
+    def tipo_recurso(self, x, y):
+        if self.posValida(x, y):
+            tipo = self.mapa[x][y].terreno
+            if tipo in [Tipo.CRISTAL, Tipo.METAL, Tipo.ESTRUTURA]:
+                return tipo
+            else:
+                return None  #nao eh recurso
+        else:
+            raise ValueError(f"Posição ({x}, {y}) inválida no mapa.")

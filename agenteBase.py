@@ -42,9 +42,33 @@ class AgenteBase(ABC):
             return random.choice(lista)
         return None
 
-    def voltarBase(self):
-        print("VOLTANDO")
-        self.estado = self.EstadosAgente.ANDANDO
+    def voltarBase(self, ambiente):
+        pos_base = ambiente.get_pos_base()
+
+        #anda um passo na direção da base
+        if self.x < pos_base[0]:
+            novo_x = self.x + 1
+        elif self.x > pos_base[0]:
+            novo_x = self.x - 1
+        else:
+            novo_x = self.x
+
+        if self.y < pos_base[1]:
+            novo_y = self.y + 1
+        elif self.y > pos_base[1]:
+            novo_y = self.y - 1
+        else:
+            novo_y = self.y
+
+        if ambiente.moverEntidade(novo_x, novo_y, self):
+            self.x = novo_x
+            self.y = novo_y
+
+        # Chegou na base
+        if (self.x, self.y) == pos_base:
+            print(f"{self.simbolo} entregou recurso na base!")
+            self.carga = 0
+            self.estado = self.EstadosAgente.ANDANDO
 
     def verAmbiente(self, ambiente):
         visao = []
@@ -54,19 +78,23 @@ class AgenteBase(ABC):
                     aux = ambiente.getElemento(j + self.x, k + self.y)
                     if aux != None:
                         visao.append(aux)    
-        return visao 
+        return visao
 
     def coletarRecurso(self, ambiente):
-        valor = ambiente.removerRecurso(self.x, self.y) 
-        if valor > 0:
+        valor = ambiente.removerRecurso(self.x, self.y)
+
+        if valor == -2:
+            print("Estrutura encontrada, aguardando agente auxiliar...")
+            self.estado = self.EstadosAgente.ANDANDO  # ou um estado tipo "ESPERANDO"
+        elif valor > 0:
             self.carga = valor
             print("Recurso Coletado")
-            self.estado = self.EstadosAgente.ANDANDO
+            self.estado = self.EstadosAgente.VOLTANDO_BASE
         elif valor == 0:
-            print("Recurso Não encontrado")
+            print("Recurso não encontrado")
             self.estado = self.EstadosAgente.ANDANDO
         else:
-            print("Extraindo Recurso")
+            print("Extraindo recurso...")
 
     # Agente
     #     AgenteSimples

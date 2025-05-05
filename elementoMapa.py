@@ -22,12 +22,24 @@ class ElementoMapa():
         self.terreno = elemento
 
     def coletarRecurso(self):
-        valor = self.terreno.value.coletar()
-        if valor[0] > 0:
-            self.terreno = valor[1]
-        return valor[0]
-    
-    def moverEntidade(self, ent, proximaPosicao: 'ElementoMapa'):        
+        #  estrutura precisa de dois ou mais agentes
+        if self.terreno == Tipo.ESTRUTURA:
+            if len(self.entidades) >= 2:
+                valor = self.terreno.value.coletar()
+                if valor[0] > 0:
+                    self.terreno = valor[1]  # limpa o terreno
+                return valor[0]
+            else:
+                #estrutura encontrada mas nao ha agentes suficientes
+                return -2  #estrutura requer 2 agentes
+        else:
+            # pode coletar sozinho
+            valor = self.terreno.value.coletar()
+            if valor[0] > 0:
+                self.terreno = valor[1]
+            return valor[0]
+
+    def moverEntidade(self, ent, proximaPosicao: 'ElementoMapa'):
         proximaPosicao.entidades.append(ent)
         # if ent in self.entidades:
         self.entidades.remove(ent)
