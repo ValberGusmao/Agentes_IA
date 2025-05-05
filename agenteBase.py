@@ -32,7 +32,7 @@ class AgenteBase(ABC):
             #visao = self.verAmbiente(ambiente)
             self.coletarRecurso(ambiente)
         else: #VoltandoBase
-           self.voltarBase()
+           self.voltarBase(ambiente)
     
     def movimentacao(self, visao):
         pass
@@ -60,9 +60,9 @@ class AgenteBase(ABC):
         else:
             novo_y = self.y
 
-        if ambiente.moverEntidade(novo_x, novo_y, self):
-            self.x = novo_x
-            self.y = novo_y
+        ambiente.moverEntidade(novo_x, novo_y, self)
+        self.x = novo_x
+        self.y = novo_y
 
         # Chegou na base
         if (self.x, self.y) == pos_base:

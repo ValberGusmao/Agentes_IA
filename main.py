@@ -57,9 +57,9 @@ if __name__ == "__main__":
     tela = View(ambiente.altura, ambiente.largura, 16)
 
     agente = AgenteReativoSimples('A', ambiente.altura // 2, ambiente.largura // 2)
-    agenteB = AgenteReativoSimples('B', ambiente.altura // 2, ambiente.largura // 2)
+    #agenteB = AgenteReativoSimples('B', ambiente.altura // 2, ambiente.largura // 2)
     tela.adicionarElementoVisual(agente.simbolo, (34, 139, 34))
-    tela.adicionarElementoVisual(agenteB.simbolo, (139, 34, 34))
+    #tela.adicionarElementoVisual(agenteB.simbolo, (139, 34, 34))
 
     ambiente.adicionarBase(ambiente.altura // 2, ambiente.largura // 2)
     ambiente.preencherMapa(Tipo.RIO, 0)
@@ -67,6 +67,6 @@ if __name__ == "__main__":
     ambiente.preencherMapa(Tipo.METAL, 2)
     ambiente.preencherMapa(Tipo.ESTRUTURA, 3)
 
-    simulacao = Simulacao(tela, ambiente, [agente, agenteB], 30)
+    simulacao = Simulacao(tela, ambiente, [agente], 30)
 
     simulacao.executar()

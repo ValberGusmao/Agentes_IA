@@ -14,7 +14,7 @@ class Ambiente:
 
     #Entidade != Estrutura/Terreno
 
-    def ecriarMapa(self, tamX, tamY):
+    def criarMapa(self, tamX, tamY):
         mapa = []
         for li in range(tamX):
             linha = []
