@@ -62,10 +62,9 @@ class AgenteBase():
                 # Já esta na base
                 novo_x, novo_y = self.x, self.y
         
-        if ambiente.posValida(novo_x, novo_y):
-            ambiente.moverAgente(novo_x, novo_y, self)
-            self.x = novo_x
-            self.y = novo_y
+        ambiente.moverAgente(novo_x, novo_y, self)
+        self.x = novo_x
+        self.y = novo_y
         
         # Chegou na base
         if (self.x, self.y) == pos_base:
@@ -97,8 +96,6 @@ class AgenteBase():
         elif valor == 0:
             print("Recurso não encontrado")
             self.estado = self.EstadosAgente.ANDANDO
-        else:
-            print("Extraindo recurso...")
 
     def __str__(self):
         return self.simbolo

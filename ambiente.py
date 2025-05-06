@@ -4,19 +4,19 @@ from elementoMapa import ElementoMapa
 from tipoTerreno import Tipo 
 
 class Ambiente:
-    def __init__(self, largura, altura):
-        self.mapa = self.criarMapa(largura, altura)
+    def __init__(self, altura:int, largura:int):
+        self.mapa = self.criarMapa(altura, largura)
         self.recursosRestantes:int = 0
         self.largura = largura
         self.altura = altura
         self.agentes = []
         self.posBase = None  # Armazena posição da base como tupla (x, y)
 
-    def criarMapa(self, tamX, tamY) -> list[list[ElementoMapa]]:
+    def criarMapa(self, altura:int, largura:int) -> list[list[ElementoMapa]]:
         mapa = []
-        for _ in range(tamX):
+        for _ in range(altura):
             linha = []
-            for _ in range(tamY):
+            for _ in range(largura):
                 linha.append(ElementoMapa())
             mapa.append(linha)
         return mapa
@@ -38,10 +38,10 @@ class Ambiente:
 
     def adicionarBase(self, x:int, y:int):
         if self.posBase == None:
-            basePos = self.getElemento(x, y)
-            if basePos != None:
+            pos = self.getElemento(x, y)
+            if pos != None:
                 self.posBase = (x, y)  # ← Aqui é onde armazenamos a posição da base
-                basePos.posicionarElemento(Tipo.BASE)
+                pos.posicionarElemento(Tipo.BASE)
             else:
                 raise ValueError(f"Posição ({x}, {y}) inválida para adicionar Base.")
         else:
@@ -50,8 +50,8 @@ class Ambiente:
     def preencherMapa(self, elemento:Tipo, quantidade:int):
         count = 0
         while count < quantidade:
-            i = random.randint(0, self.largura - 1)
-            j = random.randint(0, self.altura - 1)
+            i = random.randint(0, self.altura - 1)
+            j = random.randint(0, self.largura - 1)
             if self.mapa[i][j].terreno == Tipo.LIVRE:
                 self.mapa[i][j].posicionarElemento(elemento)
                 count += 1
@@ -73,8 +73,8 @@ class Ambiente:
             raise ValueError(f"Posição ({x}, {y}) inválida no mapa.")
         
     def getElemento(self, x:int, y:int) -> ElementoMapa:
-        if self.posValida(x, y):
-            return self.mapa[x][y]
+        if self.posValida(y, x):
+            return self.mapa[y][x]
         return None
         
     def get_pos_base(self) -> tuple[int, int]:
@@ -84,7 +84,7 @@ class Ambiente:
             raise ValueError("A base ainda não foi posicionada.")
     
     def posValida(self, x:int, y:int) -> bool:
-        return (0 <= x < self.largura) and (0 <= y < self.altura)
+        return (0 <= x < self.altura) and (0 <= y < self.largura)
     
     def printMapa(self):
         for linha in range(len(self.mapa)):

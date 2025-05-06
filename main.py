@@ -53,15 +53,15 @@ class Simulacao:
     
 
 if __name__ == "__main__":
-    ambiente = Ambiente(13, 13)
-    tela = View(ambiente.altura, ambiente.largura, 48)
+    ambiente = Ambiente(3, 13)
+    tela = View(ambiente.largura, ambiente.altura, 48)
 
-    agente = AgenteReativoSimples('A', ambiente.altura // 2, ambiente.largura // 2)
-    agenteB = AgenteReativoSimples('B', ambiente.altura // 2, ambiente.largura // 2)
+    agente = AgenteReativoSimples('A', ambiente.largura // 2, ambiente.altura // 2)
+    agenteB = AgenteReativoSimples('B', ambiente.largura // 2, ambiente.altura // 2)
     tela.adicionarElementoVisual(agente.simbolo, (34, 139, 34))
     tela.adicionarElementoVisual(agenteB.simbolo, (139, 34, 34))
 
-    ambiente.adicionarBase(ambiente.altura // 2, ambiente.largura // 2)
+    ambiente.adicionarBase(ambiente.largura // 2, ambiente.altura // 2)
     ambiente.preencherMapa(Tipo.RIO, 0)
     ambiente.preencherMapa(Tipo.CRISTAL, 15)
     ambiente.preencherMapa(Tipo.METAL, 2)

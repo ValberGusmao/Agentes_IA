@@ -16,12 +16,12 @@ class View():
     def __init__(self, tamX, tamY, cellSize):
         # Dimensões da janela
         self.cellSize = cellSize
-        self.altura = tamX * cellSize
-        self.largura = tamY * cellSize
+        self.largura = tamX * cellSize
+        self.altura = tamY * cellSize
 
         # Inicializar pygame
         pygame.init()
-        self.pygameDisplay = pygame.display.set_mode((self.altura, self.largura))
+        self.pygameDisplay = pygame.display.set_mode((self.largura, self.altura))
         pygame.display.set_caption("Planeta Desconhecido")
 
         # Inicializar fonte
