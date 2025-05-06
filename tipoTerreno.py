@@ -7,18 +7,6 @@ class Terreno():
     
     def __str__(self):
         return self.simbolo
-    
-    def coletar(self) -> tuple[int, "Tipo"]:
-        if self.valor > 0:
-            valor = self.valor
-            return (valor, Tipo.LIVRE)
-        return (0, self)
-
-class Estrutura(Terreno):
-    def coletar(self, entidades):
-        if (len(entidades) >= 2):
-            return super().coletar()
-        return 0
 
 class Tipo(Enum):
     RIO = Terreno('~', -20)
@@ -27,3 +15,7 @@ class Tipo(Enum):
     CRISTAL = Terreno('*', 10)
     METAL = Terreno('!', 20)
     ESTRUTURA = Terreno('#', 50)
+    #O terreno é uma estrutura-pre-coletada quando dois agentes estão nela,
+    #e o primeiro já pegou seu recurso.
+    #Uma estrutura não é removida direto do mapa, mas uma pre coletada sim
+    ESTRUTURA_PRE_COLETADA = Terreno('#', 50)

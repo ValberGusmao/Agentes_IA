@@ -65,10 +65,12 @@ class Ambiente:
         else:
             raise ValueError(f"Posição ({x}, {y}) inválida para adicionar recurso.")
 
-    def removerRecurso(self, x:int, y:int) -> ElementoMapa:
+    def coletarRecurso(self, x:int, y:int) -> tuple[int, Tipo]:
         pos = self.getElemento(x, y)
         if pos != None:
-            return pos.coletarRecurso()
+            valor, tipo = pos.removerRecurso()
+            self.mapa[y][x].terreno = tipo
+            return (valor, tipo)
         else:
             raise ValueError(f"Posição ({x}, {y}) inválida no mapa.")
         

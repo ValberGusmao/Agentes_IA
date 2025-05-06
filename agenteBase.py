@@ -1,12 +1,13 @@
 from enum import Enum
 import random
+from tipoTerreno import Tipo
 
 class AgenteBase():
 
     class EstadosAgente(Enum):
         ANDANDO = 1
         COLETANDO = 2
-        AGUARDANDO = 3
+        AGUARDANDO = 3 #O agente está esperando para explorar a estrutura
         VOLTANDO_BASE = 4
 
     def __init__(self, simbolo:str, x, y):
@@ -26,10 +27,11 @@ class AgenteBase():
                 ambiente.moverAgente(novaPos[0], novaPos[1], self)
                 self.x, self.y = novaPos
         elif self.estado == self.EstadosAgente.COLETANDO:
-            self.coletarRecurso(ambiente)
+            self.coletar(ambiente)
         elif self.estado == self.EstadosAgente.VOLTANDO_BASE: #VoltandoBase
            self.voltarBase(ambiente)
-        #No estado AGURDANDO ele fica fazendo nada.
+        else: #No estado AGURDANDO
+            self.coletandoEstrutura(ambiente)
         #Talvez ele poderia mandar uma mensagem pedindo ajuda aos outros agentes
     
     def movimentacao(self, visao):
@@ -83,16 +85,16 @@ class AgenteBase():
                         visao.append((posX, posY, aux))    
         return visao
 
-    def coletarRecurso(self, ambiente):
-        valor = ambiente.removerRecurso(self.x, self.y)
+    def coletar(self, ambiente):
+        valor, tipo = ambiente.coletarRecurso(self.x, self.y)
 
-        if valor == -2:
-            print("Estrutura encontrada, aguardando agente auxiliar...")
-            self.estado = self.EstadosAgente.AGUARDANDO
-        elif valor > 0:
+        if valor > 0:
             self.carga = valor
             print("Recurso Coletado")
             self.estado = self.EstadosAgente.VOLTANDO_BASE
+        elif tipo == Tipo.ESTRUTURA: #valor 0 e tipo ESTRUTURA
+            print("Estrutura encontrada, aguardando agente auxiliar...")
+            #self.estado = self.EstadosAgente.AGUARDANDO
         elif valor == 0:
             print("Recurso não encontrado")
             self.estado = self.EstadosAgente.ANDANDO

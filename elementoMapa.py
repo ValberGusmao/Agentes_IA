@@ -17,24 +17,25 @@ class ElementoMapa():
         # if ent in self.entidades: Ajuda a identificar erros isso não esta sendo verificado
         self.agentes.remove(ent)
 
-    def coletarRecurso(self) -> int:
-        #  estrutura precisa de dois ou mais agentes
-        if self.terreno == Tipo.ESTRUTURA:
-            if len(self.agentes) >= 2:
-                valor = self.terreno.value.coletar()
-                if valor[0] > 0:
-                    self.terreno = valor[1]  # limpa o terreno
-                return valor[0]
-            else:
-                #estrutura encontrada mas nao ha agentes suficientes
-                return -2  #estrutura requer 2 agentes
-        else:
-            # pode coletar sozinho
-            valor = self.terreno.value.coletar()
-            if valor[0] > 0:
-                self.terreno = valor[1]
-            return valor[0]
+    #Retornar maior que 0 se o recurso ali foi coletado
+    #Retorna tbm qual o novo tipo de terreno que deve ser substituido
+    def removerRecurso(self) -> tuple[int, Tipo]:
+        valor = self.terreno.value.valor
+        tipo:Tipo = self.terreno
 
+        if self.terreno == Tipo.ESTRUTURA:
+            #Se não tiver agentes suficientes no lugar nada acontecerá
+            if len(self.agentes) < 2:
+                valor = 0
+            #Porém se houver agentes, ambos devem ganhar os pontos
+            else:
+                tipo = Tipo.ESTRUTURA_PRE_COLETADA
+        #Só é recurso se o valor for maior que 0
+        elif valor > 0:
+            tipo = Tipo.LIVRE
+        return (valor, tipo)
+
+    #Usado pelo view
     def getElemento(self) -> "ElementoMapa":
         if self.agentes:
             return self.agentes[0]
