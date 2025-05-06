@@ -1,14 +1,14 @@
 from enum import Enum
 
 class Terreno():
-    def __init__(self, simbolo:str, valor):
+    def __init__(self, simbolo:str, valor:int):
         self.simbolo = simbolo
         self.valor = valor
     
     def __str__(self):
         return self.simbolo
     
-    def coletar(self):
+    def coletar(self) -> tuple[int, "Tipo"]:
         if self.valor > 0:
             valor = self.valor
             return (valor, Tipo.LIVRE)

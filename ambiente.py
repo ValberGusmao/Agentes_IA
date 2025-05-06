@@ -6,52 +6,48 @@ from tipoTerreno import Tipo
 class Ambiente:
     def __init__(self, largura, altura):
         self.mapa = self.criarMapa(largura, altura)
+        self.recursosRestantes:int = 0
         self.largura = largura
         self.altura = altura
-        self.basePosicionada:bool = False
-        self.entidades = [] #Entidades são elementos que podem se mover pelo mapa
-        self.pos_base = None  # Armazena posição da base como tupla (x, y)
+        self.agentes = []
+        self.posBase = None  # Armazena posição da base como tupla (x, y)
 
-    #Entidade != Estrutura/Terreno
-
-    def criarMapa(self, tamX, tamY):
+    def criarMapa(self, tamX, tamY) -> list[list[ElementoMapa]]:
         mapa = []
-        for li in range(tamX):
+        for _ in range(tamX):
             linha = []
-            for col in range(tamY):
+            for _ in range(tamY):
                 linha.append(ElementoMapa())
             mapa.append(linha)
         return mapa
 
-    def getElemento(self, x:int, y:int):
-        if self.posValida(x, y):
-            return (x, y, self.mapa[x][y])
-        return None
-    
-    def adicionarEntidade(self, entidade):
-        x = entidade.x
-        y = entidade.y
-        if self.posValida(x, y):
-            self.mapa[x][y].adicionarEntidade(entidade)
+    def adicionarAgente(self, agente):
+        pos = self.getElemento(agente.x, agente.y)
+        if pos != None:
+            pos.adicionarAgente(agente)
         else:
-            raise ValueError(f"Posição ({x}, {y}) inválida para adicionar entidade.")
+            raise ValueError(f"Posição ({agente.x}, {agente.y}) inválida para adicionar Agente.")
     
-    def moverEntidade(self, x, y, entidade):
-        if self.posValida(x, y):
-            self.mapa[entidade.x][entidade.y].moverEntidade(entidade, self.mapa[x][y])
+    def moverAgente(self, x:int, y:int, agente):
+        oldX, oldY = agente.x, agente.y
+        proximaPos = self.getElemento(x, y)
+        if proximaPos != None:
+            self.getElemento(oldX, oldY).moverAgente(agente, proximaPos)
+        else:
+            raise ValueError(f"Posição ({x}, {y}) inválida para mover o agente.")
 
-    def adicionarBase(self, x, y):
-        if self.posValida(x, y):
-            if not self.basePosicionada:
-                self.mapa[x][y].posicionarElemento(Tipo.BASE)
-                self.basePosicionada = True
-                self.pos_base = (x, y)  # ← Aqui é onde armazenamos a posição da base
+    def adicionarBase(self, x:int, y:int):
+        if self.posBase == None:
+            basePos = self.getElemento(x, y)
+            if basePos != None:
+                self.posBase = (x, y)  # ← Aqui é onde armazenamos a posição da base
+                basePos.posicionarElemento(Tipo.BASE)
             else:
-                raise ValueError("Já há uma base posicionada nesse ambiente.")
+                raise ValueError(f"Posição ({x}, {y}) inválida para adicionar Base.")
         else:
-            raise ValueError(f"Posição ({x}, {y}) inválida para adicionar Base.")
-
-    def preencherMapa(self, elemento, quantidade):
+            raise ValueError("Já há uma base posicionada nesse ambiente.")
+       
+    def preencherMapa(self, elemento:Tipo, quantidade:int):
         count = 0
         while count < quantidade:
             i = random.randint(0, self.largura - 1)
@@ -59,38 +55,37 @@ class Ambiente:
             if self.mapa[i][j].terreno == Tipo.LIVRE:
                 self.mapa[i][j].posicionarElemento(elemento)
                 count += 1
+        self.recursosRestantes = count
 
-    def adicionarRecurso(self, x, y, recurso):
-        if self.posValida(x, y):
-            self.mapa[x][y].posicionarElemento(recurso)
+    def adicionarRecurso(self, x:int, y:int, recurso:Tipo):
+        pos = self.getElemento(x, y)
+        if pos != None:
+            pos.posicionarElemento(recurso)
+            self.recursosRestantes += 1
         else:
             raise ValueError(f"Posição ({x}, {y}) inválida para adicionar recurso.")
 
-    def removerRecurso(self, x, y):
-        if self.posValida(x, y):
-            return self.mapa[x][y].coletarRecurso()
+    def removerRecurso(self, x:int, y:int) -> ElementoMapa:
+        pos = self.getElemento(x, y)
+        if pos != None:
+            return pos.coletarRecurso()
         else:
             raise ValueError(f"Posição ({x}, {y}) inválida no mapa.")
-
-    def posValida(self, x:int, y:int):
+        
+    def getElemento(self, x:int, y:int) -> ElementoMapa:
+        if self.posValida(x, y):
+            return self.mapa[x][y]
+        return None
+        
+    def get_pos_base(self) -> tuple[int, int]:
+        if self.posBase != None:
+            return self.posBase
+        else:
+            raise ValueError("A base ainda não foi posicionada.")
+    
+    def posValida(self, x:int, y:int) -> bool:
         return (0 <= x < self.largura) and (0 <= y < self.altura)
-
+    
     def printMapa(self):
         for linha in range(len(self.mapa)):
             print(" ".join(map(str, self.mapa[linha])))
-
-    def get_pos_base(self):
-        if self.basePosicionada and self.pos_base is not None:
-            return self.pos_base
-        else:
-            raise ValueError("A base ainda não foi posicionada.")
-
-    def tipo_recurso(self, x, y):
-        if self.posValida(x, y):
-            tipo = self.mapa[x][y].terreno
-            if tipo in [Tipo.CRISTAL, Tipo.METAL, Tipo.ESTRUTURA]:
-                return tipo
-            else:
-                return None  #nao eh recurso
-        else:
-            raise ValueError(f"Posição ({x}, {y}) inválida no mapa.")

@@ -18,13 +18,13 @@ class Simulacao:
         for a in self.agentes:
             a.explorar(self.ambiente)
 
-    def executar(self):
+    def executar(self, automatico:bool = True):
         rodando = True
-        automatico = True
+        automatico = automatico
         tempoInicial = time.time()
 
         for a in self.agentes:
-            ambiente.adicionarEntidade(a)
+            ambiente.adicionarAgente(a)
         
         while rodando:
             tempoPassado = time.time() - tempoInicial
@@ -53,20 +53,20 @@ class Simulacao:
     
 
 if __name__ == "__main__":
-    ambiente = Ambiente(20, 20)
-    tela = View(ambiente.altura, ambiente.largura, 16)
+    ambiente = Ambiente(13, 13)
+    tela = View(ambiente.altura, ambiente.largura, 48)
 
     agente = AgenteReativoSimples('A', ambiente.altura // 2, ambiente.largura // 2)
-    #agenteB = AgenteReativoSimples('B', ambiente.altura // 2, ambiente.largura // 2)
+    agenteB = AgenteReativoSimples('B', ambiente.altura // 2, ambiente.largura // 2)
     tela.adicionarElementoVisual(agente.simbolo, (34, 139, 34))
-    #tela.adicionarElementoVisual(agenteB.simbolo, (139, 34, 34))
+    tela.adicionarElementoVisual(agenteB.simbolo, (139, 34, 34))
 
     ambiente.adicionarBase(ambiente.altura // 2, ambiente.largura // 2)
     ambiente.preencherMapa(Tipo.RIO, 0)
     ambiente.preencherMapa(Tipo.CRISTAL, 15)
     ambiente.preencherMapa(Tipo.METAL, 2)
-    ambiente.preencherMapa(Tipo.ESTRUTURA, 3)
+    ambiente.preencherMapa(Tipo.ESTRUTURA, 1)
 
-    simulacao = Simulacao(tela, ambiente, [agente], 30)
+    simulacao = Simulacao(tela, ambiente, [agente, agenteB], 30)
 
-    simulacao.executar()
+    simulacao.executar(False)
