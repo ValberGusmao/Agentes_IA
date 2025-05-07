@@ -1,4 +1,5 @@
 from agenteBase import AgenteBase
+from tipoTerreno import Tipo
 
 
 class AgenteComMemoria(AgenteBase):
@@ -12,10 +13,15 @@ class AgenteComMemoria(AgenteBase):
     def __init__(self, simbolo, x, y):
         super().__init__(simbolo, x, y)
         self.locais_visitados = set()
+        self.locais_com_recurso = set()
         self.guarda_caminho()  # guardando posicao inicial
+        
 
     def guarda_caminho(self):
         self.locais_visitados.add((self.x, self.y))
+
+    def guarda_local_recurso(self):
+        self.locais_com_recurso.add((self.x,self.y))
 
     def movimentacao(self, visao):
         maior = 0
@@ -25,7 +31,13 @@ class AgenteComMemoria(AgenteBase):
 
         # vai olhar apenas para locais que nao foram visitados
         for (x, y, elementoMapa) in visao:
-            valor = elementoMapa.terreno.value.valor
+            terreno = elementoMapa.terreno
+            valor = terreno.value.valor
+            
+
+            # para guardar o local do recurso em um conjunto assim que ve 
+            if terreno in {Tipo.CRISTAL, Tipo.METAL, Tipo.ESTRUTURA}:
+                self.guarda_local_recurso()
             if valor > maior:
                 maior = valor
                 pos = (x, y)
