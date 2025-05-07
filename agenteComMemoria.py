@@ -20,12 +20,15 @@ class AgenteComMemoria(AgenteBase):
     def guarda_caminho(self):
         self.locais_visitados.add((self.x, self.y))
 
-    def guarda_local_recurso(self):
-        self.locais_com_recurso.add((self.x,self.y))
+    def guarda_local_recurso(self,x,y):
+        self.locais_com_recurso.add((x,y))
+
 
     def movimentacao(self, visao):
         maior = 0
         opcoes = []
+
+        
 
         self.guarda_caminho()
 
@@ -33,11 +36,12 @@ class AgenteComMemoria(AgenteBase):
         for (x, y, elementoMapa) in visao:
             terreno = elementoMapa.terreno
             valor = terreno.value.valor
-            
 
             # para guardar o local do recurso em um conjunto assim que ve 
             if terreno in {Tipo.CRISTAL, Tipo.METAL, Tipo.ESTRUTURA}:
-                self.guarda_local_recurso()
+                self.guarda_local_recurso(x,y)
+                print(f"\nRecursos conhecidos: {self.locais_com_recurso}") 
+                
             if valor > maior:
                 maior = valor
                 pos = (x, y)
