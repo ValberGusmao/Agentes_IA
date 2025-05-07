@@ -56,7 +56,7 @@ class Simulacao:
 
 
 if __name__ == "__main__":
-    ambiente = Ambiente(6, 6)
+    ambiente = Ambiente(10, 10)
     tela = View(ambiente.largura, ambiente.altura, 48)
 
     meioX, meioY = ambiente.largura // 2, ambiente.altura // 2
@@ -68,15 +68,15 @@ if __name__ == "__main__":
     ambiente.adicionarBase(meioX, meioY)
 
     tela.adicionarElementoVisual(agente.simbolo, (34, 139, 34))
-    tela.adicionarElementoVisual(agenteB.simbolo, (139, 34, 34))
+    tela.adicionarElementoVisual(agenteB.simbolo, (139 , 34, 34))
     tela.adicionarElementoVisual(agenteMemoria.simbolo,(128, 0, 128))
 
     # ambiente.preencherMapa(Tipo.RIO, 0)
     ambiente.preencherMapa(Tipo.METAL, 2)
     ambiente.preencherMapa(Tipo.CRISTAL, 15)
-    ambiente.preencherMapa(Tipo.ESTRUTURA, 1)
+    ambiente.preencherMapa(Tipo.ESTRUTURA, 2)
 
-    simulacao = Simulacao(tela, ambiente, [agente, agenteB,agenteMemoria], 30)
+    simulacao = Simulacao(tela, ambiente, [agente, agenteB, agenteMemoria], 30)
 
     # True inicia a exploração dos agentes de forma automática
     # False começa de forma manual

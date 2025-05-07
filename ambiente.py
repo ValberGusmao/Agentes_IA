@@ -49,13 +49,17 @@ class Ambiente:
        
     def preencherMapa(self, elemento:Tipo, quantidade:int):
         count = 0
-        while count < quantidade:
-            i = random.randint(0, self.altura - 1)
-            j = random.randint(0, self.largura - 1)
-            if self.mapa[i][j].terreno == Tipo.LIVRE:
-                self.mapa[i][j].posicionarElemento(elemento)
-                count += 1
-        self.recursosRestantes = count
+
+        if self.recursosRestantes + quantidade < self.largura * self.altura:
+            while count < quantidade:
+                i = random.randint(0, self.altura - 1)
+                j = random.randint(0, self.largura - 1)
+                if self.mapa[i][j].terreno == Tipo.LIVRE:
+                    self.mapa[i][j].posicionarElemento(elemento)
+                    count += 1
+            self.recursosRestantes = count
+        else:
+            raise ValueError("Está sendo adicionado mais recursos do que a quantidade de espaço disponível.")
 
     def adicionarRecurso(self, x:int, y:int, recurso:Tipo):
         pos = self.getElemento(x, y)
