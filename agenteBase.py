@@ -143,7 +143,7 @@ class AgenteBase():
         return None
     
     def enviarMensagem(self, conteudo):
-        self.BDI.receberMensagem(conteudo)
+        self.BDI.receberMensagemBDI(conteudo)
 
     def __str__(self):
         return self.simbolo
