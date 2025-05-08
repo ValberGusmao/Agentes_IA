@@ -46,9 +46,10 @@ class AgenteBase():
     def entrouNaBase(self, carga:Carga):
         self.estado = self.EstadosAgente.ANDANDO
         self.pontuacao += self.carga.valor
-        self.carga.valor = 0
         if carga.valor != 0:
+            print("DEPOSITOU")
             self.BDI.depositarCarga(carga)
+        self.carga.valor = 0
 
         print(f"{self.simbolo} entregou recurso na base!")        
 

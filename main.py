@@ -67,7 +67,7 @@ if __name__ == "__main__":
     agentes_info = [
         # ('A', AgenteReativoSimples, (34, 139, 34)),
         # ('B', AgenteReativoSimples, (139, 34, 34)),   
-        ('M', AgenteDeObjetivos, (128, 0, 128)), 
+        #('M', AgenteDeObjetivos, (128, 0, 128)), 
     ]
     #Adicionar múltiplos agentes
     for _ in range(10):
