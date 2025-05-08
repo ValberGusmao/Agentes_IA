@@ -10,8 +10,8 @@ class AgenteComMemoria(AgenteBase):
     # Quando encontra um recurso ele deve continuar seguindo por caminhos aleatorios e salvando seu caminho mas deve voltar para a base (ainda nao fiz isso)
     # Volta para base: deve pegar caminho novo para descobrir mais caminhos, quando chegar na base deve atualizar sua lista com BDI
     # BDI deve remover da lista locais_com_recursos o local que os agentes pegaram um recurso
-    def __init__(self, simbolo, x, y):
-        super().__init__(simbolo, x, y)
+    def __init__(self, simbolo:str, pos:tuple[int, int]):
+        super().__init__(simbolo, pos)  
         self.locais_visitados = set()
         self.locais_com_recurso = set()
         self.ultima_posicao = None  # Armazena a última posição visitada

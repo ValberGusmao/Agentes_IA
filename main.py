@@ -9,78 +9,89 @@ from agenteComMemoria import AgenteComMemoria, AgenteBase
 
 # Responsável por unir todos os elementos
 
-
 class Simulacao:
-    def __init__(self, tela: View, ambiente: Ambiente, agentes: list[AgenteBase], tempoLimite: int):
+    def __init__(self, ambiente: Ambiente, agentes: list[AgenteBase], tempoLimite: int, automatico: bool = True):
         self.tempoLimite = tempoLimite
-        self.tela = tela
+        self.automatico = automatico
         self.ambiente = ambiente
         self.agentes = agentes
+
+        self.tempoInicial = time.time()
+        self.execucoes = 0
 
     def agentesExplorar(self):
         for a in self.agentes:
             a.explorar(self.ambiente)
+        self.execucoes += 1
 
-    def executar(self, automatico: bool = True):
-        rodando = True
-        automatico = automatico
-        tempoInicial = time.time()
+    def executar(self) -> bool:
+        auto = self.automatico
 
-        for a in self.agentes:
-            ambiente.adicionarAgente(a)
+        if self.ambiente.recursosRestantes <= 0:
+            return False
 
-        while rodando:
-            tempoPassado = time.time() - tempoInicial
-            tempoRestante = int(self.tempoLimite - tempoPassado)
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                return False
+            elif evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_RETURN:  # ENTER alterna entre manual e automático
+                    auto = not auto
+                if evento.key == pygame.K_SPACE and not auto:  # SPACE executa explorar uma vez no modo manual
+                    self.agentesExplorar()
+        if auto:
+            self.agentesExplorar()
+        self.automatico = auto
+        return True
 
-            if tempoRestante < 0:
-                print("Tempo limite atingido. Encerrando o programa.")
-                tempoRestante = 0
-                break
-
-            for evento in pygame.event.get():
-                if evento.type == pygame.QUIT:
-                    rodando = False
-                elif evento.type == pygame.KEYDOWN:
-                    if evento.key == pygame.K_RETURN:  # ENTER alterna entre manual e automático
-                        automatico = not automatico
-                    elif evento.key == pygame.K_SPACE and not automatico:  # SPACE executa explorar uma vez no modo manual
-                        self.agentesExplorar()
-
-            if automatico:
-                self.agentesExplorar()
-
-            tela.exibir(self.ambiente, tempoRestante)
-
-        tela.fecharTela()
-
+    def tempoDeExecucao(self):
+        print(f"{time.time() - self.tempoInicial:.2f} segundos")
+    
+    def numeroExecucoes(self):
+        print(f"Números de Execuções: {self.execucoes} ")
 
 if __name__ == "__main__":
-    ambiente = Ambiente(10, 10)
-    tela = View(ambiente.largura, ambiente.altura, 48)
+    ambiente = Ambiente(25, 25)
 
-    meioX, meioY = ambiente.largura // 2, ambiente.altura // 2
+    ambiente.preencherMapa(Tipo.METAL, 20)
+    ambiente.preencherMapa(Tipo.CRISTAL, 30)
+    ambiente.preencherMapa(Tipo.ESTRUTURA, 1)
 
-    agente = AgenteReativoSimples('A', meioX, meioY)
-    agenteB = AgenteReativoSimples('B', meioX, meioY)
-    agenteMemoria = AgenteComMemoria('M', meioX, meioY)
+    tela = View(ambiente.largura, ambiente.altura, 16)
+            
+    posBase = (ambiente.largura // 2, ambiente.altura // 2)
+    ambiente.adicionarBase(posBase)
 
-    ambiente.adicionarBase(meioX, meioY)
+    agentes_info = [
+        ('A', AgenteReativoSimples, (34, 139, 34)),
+        ('B', AgenteReativoSimples, (139, 34, 34)),   
+        ('M', AgenteComMemoria, (128, 0, 128)), 
+    ]
+    #Adicionar múltiplos agentes
+    # for _ in range(10):
+    #     agentes_info.append(('M', AgenteComMemoria, (128, 0, 128)))
+    
+    agentes = []
+    for simbolo, classe, cor in agentes_info:
+        agente = classe(simbolo, posBase)
+        tela.adicionarElementoVisual(agente.simbolo, cor)
+        ambiente.adicionarAgente(agente)
+        agentes.append(agente)
 
-    tela.adicionarElementoVisual(agente.simbolo, (34, 139, 34))
-    tela.adicionarElementoVisual(agenteB.simbolo, (139 , 34, 34))
-    tela.adicionarElementoVisual(agenteMemoria.simbolo,(128, 0, 128))
+    simulacao = Simulacao(ambiente, agentes, 5)
 
-    # ambiente.preencherMapa(Tipo.RIO, 0)
-    ambiente.preencherMapa(Tipo.METAL, 2)
-    ambiente.preencherMapa(Tipo.CRISTAL, 15)
-    ambiente.preencherMapa(Tipo.ESTRUTURA, 2)
-
-    simulacao = Simulacao(tela, ambiente, [agente, agenteB, agenteMemoria], 30)
-
+    clock = pygame.time.Clock()
+    velocidade = 30 #Número médio de excuções por segundo
+    rodando = True
     # True inicia a exploração dos agentes de forma automática
     # False começa de forma manual
     # Inputs
     # ENTER altera entre um desses modos
     # ESPACO Roda a exploração 1 vez quando está parado
-    simulacao.executar(True)
+    while rodando:
+        rodando = simulacao.executar()
+        tela.exibir(ambiente)
+        clock.tick(velocidade)  # Limita o loop para rodar a 30 frames por segundo
+
+    simulacao.tempoDeExecucao()
+    simulacao.numeroExecucoes()
+    tela.fecharTela()

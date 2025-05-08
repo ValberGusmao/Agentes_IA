@@ -24,20 +24,10 @@ class View():
         self.pygameDisplay = pygame.display.set_mode((self.largura, self.altura))
         pygame.display.set_caption("Planeta Desconhecido")
 
-        # Inicializar fonte
-        pygame.font.init()
-        self.fonte = pygame.font.SysFont('Arial', 20)
-
-    def exibir(self, ambiente, tempoRestante):
+    def exibir(self, ambiente):
         self.pygameDisplay.fill((0, 0, 0))
         self.desenhar_grid(ambiente)
-
-        # Renderizar o tempo restante na tela
-        texto_tempo = self.fonte.render(f"Tempo restante: {tempoRestante}s", True, (0, 0, 0))
-        self.pygameDisplay.blit(texto_tempo, (10, 10))
         pygame.display.flip()
-
-        pygame.time.Clock().tick(10)
 
     def fecharTela(self):
         pygame.quit()
@@ -46,8 +36,11 @@ class View():
         View.colorMap[chave] = color
 
     def desenhar_grid(self, ambiente):
-        for i in range(len(ambiente.mapa)):
-            for j in range(len(ambiente.mapa[0])):
+        altura = min(self.altura // self.cellSize, ambiente.altura)
+        largura = min(self.largura // self.cellSize, ambiente.largura)
+
+        for i in range(altura):
+            for j in range(largura):
                 eleMapa = ambiente.mapa[i][j].getElemento()
 
                 if eleMapa in self.colorMap:

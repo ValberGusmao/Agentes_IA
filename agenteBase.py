@@ -9,14 +9,13 @@ class AgenteBase():
         COLETANDO = 2
         VOLTANDO_BASE = 3
 
-    def __init__(self, simbolo:str, x, y):
+    def __init__(self, simbolo:str, pos:tuple[int, int]):
         super().__init__()
 
         self.estado = self.EstadosAgente.ANDANDO
         self.simbolo = simbolo
         self.carga = 0
-        self.x = x
-        self.y = y
+        self.x, self.y = pos 
     
     def explorar(self, ambiente):
         if self.estado == self.EstadosAgente.ANDANDO:

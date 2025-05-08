@@ -36,14 +36,14 @@ class Ambiente:
         else:
             raise ValueError(f"Posição ({x}, {y}) inválida para mover o agente.")
 
-    def adicionarBase(self, x:int, y:int):
+    def adicionarBase(self, pos:tuple[int, int]):
         if self.posBase == None:
-            pos = self.getElemento(x, y)
-            if pos != None:
-                self.posBase = (x, y)  # ← Aqui é onde armazenamos a posição da base
-                pos.posicionarElemento(Tipo.BASE)
+            posEl = self.getElemento(pos[0], pos[1])
+            if posEl != None:
+                self.posBase = pos  # ← Aqui é onde armazenamos a posição da base
+                posEl.posicionarElemento(Tipo.BASE)
             else:
-                raise ValueError(f"Posição ({x}, {y}) inválida para adicionar Base.")
+                raise ValueError(f"Posição ({pos}) inválida para adicionar Base.")
         else:
             raise ValueError("Já há uma base posicionada nesse ambiente.")
        
@@ -57,7 +57,7 @@ class Ambiente:
                 if self.mapa[i][j].terreno == Tipo.LIVRE:
                     self.mapa[i][j].posicionarElemento(elemento)
                     count += 1
-            self.recursosRestantes = count
+            self.recursosRestantes += count
         else:
             raise ValueError("Está sendo adicionado mais recursos do que a quantidade de espaço disponível.")
 
@@ -74,6 +74,8 @@ class Ambiente:
         if pos != None:
             valor, tipo = pos.removerRecurso()
             self.mapa[y][x].terreno = tipo
+            if tipo == Tipo.LIVRE and valor > 0:
+                self.recursosRestantes -= 1
             return (valor, tipo)
         else:
             raise ValueError(f"Posição ({x}, {y}) inválida no mapa.")
