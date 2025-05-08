@@ -41,7 +41,14 @@ class AgenteBDI():
         pass
 
     def receberMensagem(self, mensagem):
-        print("oi")
+        print("sou o bdi e recebi a mensagem")
         if mensagem['tipo'] == Tipo.ESTRUTURA:
             print(f"Estrutura em {mensagem['posicao']}")
             self.estruturasConhecidas.add(mensagem['posicao'])
+
+    def enviarMensagemBDI(self):
+        local_estrutura = self.estruturasConhecidas[0]
+        # enviando a localizacao de estrutura conhecida
+        return local_estrutura
+
+

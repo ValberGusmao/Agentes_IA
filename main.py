@@ -8,7 +8,7 @@ from agenteReativoSimples import AgenteReativoSimples
 from agenteDeEstados import AgenteDeEstados, AgenteBase
 from agenteDeObjetivos import AgenteDeObjetivos
 from agenteBDI import AgenteBDI
-
+from agenteCooperativo import AgenteCooperativo
 # Responsável por unir todos os elementos
 
 class Simulacao:
