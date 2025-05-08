@@ -75,11 +75,11 @@ class Simulacao:
         print(f"Números de Execuções: {self.execucoes} ")
 
 if __name__ == "__main__":
-    ambiente = Ambiente(10, 10)
+    ambiente = Ambiente(25, 25)
 
-    ambiente.preencherMapa(Tipo.METAL, 1)
-    ambiente.preencherMapa(Tipo.CRISTAL, 0)
-    ambiente.preencherMapa(Tipo.ESTRUTURA, 0)
+    ambiente.preencherMapa(Tipo.METAL, 20)
+    ambiente.preencherMapa(Tipo.CRISTAL, 30)
+    ambiente.preencherMapa(Tipo.ESTRUTURA, 3)
 
     tela = View(ambiente.largura, ambiente.altura, 16)
             

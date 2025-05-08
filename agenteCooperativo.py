@@ -2,9 +2,13 @@ from agenteDeObjetivos import AgenteDeObjetivos
 
 
 class AgenteCooperativo(AgenteDeObjetivos):
-    def receberMensagemCoop(self):
+
+    def __init__(self, simbolo, pos, bdi):
+        super().__init__(simbolo, pos, bdi)
+        bdi.agentesCooperativos.append(self)
+
+    def receberMensagemCoop(self, local_estrutura):
         print(" agente cooperativo recebendo a mensagem do bdi")
-        local_estrutura = self.BDI.enviarMensagemBDI
         
         print("coordenada:", local_estrutura)
         self.objetivo = local_estrutura
@@ -13,7 +17,7 @@ class AgenteCooperativo(AgenteDeObjetivos):
     def coletar(self, ambiente):
         super().coletar(ambiente)
 
-        coordenada = self.receberMensagemCoop()
+        coordenada = self.objetivo
         if coordenada in self.BDI.estruturasConhecidas:
             self.BDI.estruturasConhecidas.remove(coordenada)
 
