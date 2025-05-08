@@ -22,7 +22,3 @@ class AgenteReativoSimples(AgenteBase):
         else:
             res = self.escolherAleatorio(opcoes)
             return (res[0], res[1])
-        
-    def entrouNaBase(self, carga:Carga):
-        super().entrouNaBase(carga)
-        self.BDI.depositarCarga(carga)

@@ -34,11 +34,9 @@ class AgenteDeEstados(AgenteBase):
         for (x, y, elementoMapa) in visao:
             valor = elementoMapa.terreno.value.valor
 
-            print(elementoMapa)
             # para guardar o local do recurso em um conjunto assim que ve
             if valor > 0:
                 self.guarda_local_recurso(x, y)
-                print(f"\nRecursos conhecidos: {self.locais_com_recurso}")
 
             if valor > maior:
                 maior = valor
@@ -46,7 +44,6 @@ class AgenteDeEstados(AgenteBase):
             elif (x, y) not in self.locais_visitados:
                 if (self.x - x == 0 or self.y - y == 0):
                     opcoes.append((x, y))
-        print("---------")
         if maior != 0:
             # O recurso tá na diagonal. O agente tem que escolher entre duas opções em linha reta
             res = self.quebrarDiagonal((self.x, self.y), pos)
@@ -73,8 +70,4 @@ class AgenteDeEstados(AgenteBase):
 
     def entrouNaBase(self, carga:Carga):
         super().entrouNaBase(carga)
-        self.BDI.depositarCarga(carga)
-        pos = (carga.x, carga.y)
-        if pos in self.locais_com_recurso:
-            self.locais_com_recurso.remove(pos)
         self.locais_com_recurso = self.BDI.atualizarCrencas(self.locais_com_recurso)

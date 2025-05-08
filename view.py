@@ -24,10 +24,13 @@ class View():
         self.pygameDisplay = pygame.display.set_mode((self.largura, self.altura))
         pygame.display.set_caption("Planeta Desconhecido")
 
-    def exibir(self, ambiente, bdi):
+    def exibir(self, completo:bool, ambiente, bdi):
         self.pygameDisplay.fill((0, 0, 0))
-        self.desenhar_grid(ambiente)
-        #self.desenharApenasDescobertos(ambiente, bdi)
+        
+        if completo:
+            self.desenhar_grid(ambiente)
+        else:
+            self.desenharApenasDescobertos(ambiente, bdi)
         pygame.display.flip()
 
     def fecharTela(self):

@@ -6,6 +6,7 @@ from tipoTerreno import Tipo
 from ambiente import Ambiente
 from agenteReativoSimples import AgenteReativoSimples
 from agenteDeEstados import AgenteDeEstados, AgenteBase
+from agenteDeObjetivos import AgenteDeObjetivos
 from agenteBDI import AgenteBDI
 
 # Responsável por unir todos os elementos
@@ -55,22 +56,22 @@ if __name__ == "__main__":
 
     ambiente.preencherMapa(Tipo.METAL, 20)
     ambiente.preencherMapa(Tipo.CRISTAL, 30)
-    ambiente.preencherMapa(Tipo.ESTRUTURA, 1)
+    ambiente.preencherMapa(Tipo.ESTRUTURA, 0)
 
     tela = View(ambiente.largura, ambiente.altura, 16)
             
     posBase = (ambiente.largura // 2, ambiente.altura // 2)
     ambiente.adicionarBase(posBase)
 
-    agenteBDI = AgenteBDI()
+    agenteBDI = AgenteBDI(posBase[0], posBase[1])
     agentes_info = [
         # ('A', AgenteReativoSimples, (34, 139, 34)),
         # ('B', AgenteReativoSimples, (139, 34, 34)),   
-        ('M', AgenteDeEstados, (128, 0, 128)), 
+        ('M', AgenteDeObjetivos, (128, 0, 128)), 
     ]
     #Adicionar múltiplos agentes
-    # for _ in range(10):
-    #     agentes_info.append(('M', AgenteDeEstados, (128, 0, 128)))
+    for _ in range(10):
+         agentes_info.append(('M', AgenteDeObjetivos, (128, 0, 128)))
     
     agentes = []
     for simbolo, classe, cor in agentes_info:
@@ -82,7 +83,7 @@ if __name__ == "__main__":
     simulacao = Simulacao(ambiente, agentes, 5, False)
 
     clock = pygame.time.Clock()
-    velocidade = 5 #Número médio de excuções por segundo
+    velocidade = 30 #Número médio de excuções por segundo
     rodando = True
     # True inicia a exploração dos agentes de forma automática
     # False começa de forma manual
@@ -91,7 +92,7 @@ if __name__ == "__main__":
     # ESPACO Roda a exploração 1 vez quando está parado
     while rodando:
         rodando = simulacao.executar()
-        tela.exibir(ambiente, agenteBDI)
+        tela.exibir(True,ambiente, agenteBDI)
         clock.tick(velocidade)  # Limita o loop para rodar a 30 frames por segundo
 
     simulacao.tempoDeExecucao()

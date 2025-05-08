@@ -4,9 +4,9 @@ from tipoTerreno import Tipo
 
 class Carga():
     def __init__(self):
-        self.x:int
-        self.y:int
-        self.valor:int
+        self.x:int = 0
+        self.y:int = 0
+        self.valor:int = 0
 
 class AgenteBase():
 
@@ -47,6 +47,8 @@ class AgenteBase():
         self.estado = self.EstadosAgente.ANDANDO
         self.pontuacao += self.carga.valor
         self.carga.valor = 0
+        if carga.valor != 0:
+            self.BDI.depositarCarga(carga)
 
         print(f"{self.simbolo} entregou recurso na base!")        
 
@@ -73,6 +75,7 @@ class AgenteBase():
         elif valor == 0:
             print("Recurso não encontrado")
             self.estado = self.EstadosAgente.ANDANDO
+        return valor
 
     
     def verAmbiente(self, ambiente) -> list:
