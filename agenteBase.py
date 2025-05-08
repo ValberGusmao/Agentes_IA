@@ -86,6 +86,12 @@ class AgenteBase():
             self.estado = self.EstadosAgente.VOLTANDO_BASE
         elif tipo == Tipo.ESTRUTURA: #valor 0 e tipo ESTRUTURA
             print("Estrutura encontrada, aguardando agente auxiliar...")
+            mensagem = {
+            'tipo': Tipo.ESTRUTURA,
+            'posicao': (self.x, self.y),
+        }
+            self.enviarMensagem(mensagem)
+
         elif valor == 0:
             print("Recurso não encontrado")
             self.estado = self.EstadosAgente.ANDANDO
@@ -134,10 +140,13 @@ class AgenteBase():
         if lista:
             return random.choice(lista)
         return None
+    
+    def enviarMensagem(self, conteudo):
+        self.BDI.receberMensagem(conteudo)
 
     def __str__(self):
         return self.simbolo
-
+    
     # Agente
     #     AgenteSimples
     #     AgenteComMemoria

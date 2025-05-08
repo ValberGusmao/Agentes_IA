@@ -1,4 +1,5 @@
 from agenteBase import Carga
+from elementoMapa import Tipo
 
 class AgenteBDI():
     def __init__(self, x:int, y:int):
@@ -6,6 +7,7 @@ class AgenteBDI():
         self.y = y
         self.recursosConhecidos:set[tuple[int, int]] = set()
         self.recursosColetado:set[tuple[int, int]] = set()
+        self.estruturasConhecidas: set[tuple[int,int]] = set() 
         
     def depositarCarga(self, carga:Carga):
         pos = (carga.x, carga.y)
@@ -37,3 +39,9 @@ class AgenteBDI():
 
     def agenteSaiuDaBase(self):
         pass
+
+    def receberMensagem(self, mensagem):
+        print("oi")
+        if mensagem['tipo'] == Tipo.ESTRUTURA:
+            print(f"Estrutura em {mensagem['posicao']}")
+            self.estruturasConhecidas.add(mensagem['posicao'])
