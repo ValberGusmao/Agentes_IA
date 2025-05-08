@@ -14,6 +14,7 @@ class AgenteBase():
 
         self.estado = self.EstadosAgente.ANDANDO
         self.simbolo = simbolo
+        self.pontuacao = 0
         self.carga = 0
         self.x, self.y = pos 
     
@@ -32,6 +33,7 @@ class AgenteBase():
             self.deslocarAgente(ambiente, novaPos)
             if novaPos == ambiente.posBase:
                 print(f"{self.simbolo} entregou recurso na base!")
+                self.pontuacao += self.carga
                 self.carga = 0
                 self.estado = self.EstadosAgente.ANDANDO
     
@@ -56,7 +58,6 @@ class AgenteBase():
             self.estado = self.EstadosAgente.VOLTANDO_BASE
         elif tipo == Tipo.ESTRUTURA: #valor 0 e tipo ESTRUTURA
             print("Estrutura encontrada, aguardando agente auxiliar...")
-            #self.estado = self.EstadosAgente.AGUARDANDO
         elif valor == 0:
             print("Recurso não encontrado")
             self.estado = self.EstadosAgente.ANDANDO
