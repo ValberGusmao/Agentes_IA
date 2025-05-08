@@ -95,7 +95,8 @@ class AgenteBase():
         elif valor == 0:
             print("Recurso não encontrado")
             self.estado = self.EstadosAgente.ANDANDO
-        return valor
+
+        return (valor, tipo)
 
     
     def verAmbiente(self, ambiente) -> list:

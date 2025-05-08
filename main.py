@@ -94,7 +94,8 @@ if __name__ == "__main__":
     # ENTER altera entre um desses modos
     # ESPACO Roda a exploração 1 vez quando está parado
 
-    completo = False
+    completo = True
+    simulacao.completo = completo
     while rodando:
         rodando = simulacao.executar()
         tela.exibir(simulacao.completo, ambiente, agenteBDI)
