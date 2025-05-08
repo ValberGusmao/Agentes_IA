@@ -1,8 +1,6 @@
 from agenteBase import AgenteBase
-from tipoTerreno import Tipo
 
-
-class AgenteComMemoria(AgenteBase):
+class AgenteDeEstados(AgenteBase):
     # Explora como o reativo simples, porem evita coordenadas ja visitadas por ele
     # Entao ele vai guardando o caminho dele ate encontrar um recurso
     # verifica se o local ja foi visitado
@@ -34,11 +32,10 @@ class AgenteComMemoria(AgenteBase):
 
         # vai olhar apenas para locais que nao foram visitados
         for (x, y, elementoMapa) in visao:
-            terreno = elementoMapa.terreno
-            valor = terreno.value.valor
+            valor = elementoMapa.terreno.value.valor
 
             # para guardar o local do recurso em um conjunto assim que ve
-            if terreno in {Tipo.CRISTAL, Tipo.METAL, Tipo.ESTRUTURA}:
+            if valor > 0:
                 self.guarda_local_recurso(x, y)
                 print(f"\nRecursos conhecidos: {self.locais_com_recurso}")
 
@@ -69,12 +66,6 @@ class AgenteComMemoria(AgenteBase):
                     # nao inclui a ultima posicao
                     if (x, y) != self.ultima_posicao:
                         todas_opcoes.append((x, y))
-
-                if todas_opcoes:
-                    res = self.escolherAleatorio(todas_opcoes)
-                else:
-                    for (x, y, _) in visao:
-                        todas_opcoes.append((x, y))
-                    res = self.escolherAleatorio(todas_opcoes)
-
+                
+                res = self.escolherAleatorio(todas_opcoes)
             return res

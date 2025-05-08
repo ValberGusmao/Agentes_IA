@@ -4,8 +4,8 @@ import pygame
 from view import View
 from tipoTerreno import Tipo
 from ambiente import Ambiente
-from agenteReativoSimples import AgenteReativoSimples, AgenteBase
-from agenteComMemoria import AgenteComMemoria, AgenteBase
+from agenteReativoSimples import AgenteReativoSimples
+from agenteDeEstados import AgenteDeEstados, AgenteBase
 
 # Responsável por unir todos os elementos
 
@@ -62,13 +62,18 @@ if __name__ == "__main__":
     ambiente.adicionarBase(posBase)
 
     agentes_info = [
-        ('A', AgenteReativoSimples, (34, 139, 34)),
-        ('B', AgenteReativoSimples, (139, 34, 34)),   
-        ('M', AgenteComMemoria, (128, 0, 128)), 
+        #('A', AgenteReativoSimples, (34, 139, 34)),
+        #('B', AgenteReativoSimples, (139, 34, 34)),   
+        ('M', AgenteDeEstados, (128, 0, 128)), 
+        ('M', AgenteDeEstados, (128, 0, 128)), 
+        ('M', AgenteDeEstados, (128, 0, 128)), 
+        ('M', AgenteDeEstados, (128, 0, 128)), 
+        ('M', AgenteDeEstados, (128, 0, 128)), 
+        ('M', AgenteDeEstados, (128, 0, 128)), 
     ]
     #Adicionar múltiplos agentes
     # for _ in range(10):
-    #     agentes_info.append(('M', AgenteComMemoria, (128, 0, 128)))
+    #     agentes_info.append(('M', AgenteDeEstados, (128, 0, 128)))
     
     agentes = []
     for simbolo, classe, cor in agentes_info:
