@@ -1,10 +1,15 @@
-from agenteBase import AgenteBase, Carga
+from agenteBase import AgenteBase
 
 class AgenteReativoSimples(AgenteBase):
-    def movimentacao(self, visao) -> tuple[int, int]:
+    def movimentacao(self, recursos, visao) -> tuple[int, int]:
         maior = 0
         opcoes = []
-        for (x, y, elementoMapa) in visao:
+
+        lista = recursos
+        if lista == []:
+            lista = visao
+            
+        for (x, y, elementoMapa) in lista:
             valor = elementoMapa.terreno.value.valor
             if valor > maior:
                 maior = valor

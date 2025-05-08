@@ -53,6 +53,8 @@ class View():
                 elif (j, i) in bdi.recursosConhecidos:
                     if eleMapa in self.colorMap:
                         cor = self.colorMap[eleMapa]
+                elif (i, j) == (bdi.x, bdi.y):
+                    cor = self.colorMap[eleMapa]
                 else:
                     cor = self.colorMap[Tipo.LIVRE]
                 pygame.draw.rect(self.pygameDisplay, cor, (j * self.cellSize, i * self.cellSize, self.cellSize, self.cellSize))  # posição

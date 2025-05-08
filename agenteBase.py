@@ -27,9 +27,11 @@ class AgenteBase():
         self.carga = Carga()
     
     def explorar(self, ambiente):
+        visao = self.verAmbiente(ambiente)
+        recursos = self.verificarRecursos(visao)
+        
         if self.estado == self.EstadosAgente.ANDANDO:
-            visao = self.verAmbiente(ambiente)
-            novaPos = self.movimentacao(visao)
+            novaPos = self.movimentacao(recursos, visao)
             self.deslocarAgente(ambiente, novaPos)
         
         elif self.estado == self.EstadosAgente.COLETANDO:
@@ -42,6 +44,17 @@ class AgenteBase():
             if novaPos == ambiente.posBase:
                 self.entrouNaBase(self.carga)
     
+
+    def verificarRecursos(self, visao) -> tuple[int, int, any]:
+        recursosVistos = []
+        for (x, y, elementoMapa) in visao:
+            valor = elementoMapa.terreno.value.valor
+            # para guardar o local do recurso em um conjunto assim que ve
+            if valor > 0:
+                recursosVistos.append((x, y, elementoMapa))
+        return recursosVistos
+
+
     #Os agentes Simples e com Estado estão complementando essa função com a interação com o BDI
     def entrouNaBase(self, carga:Carga):
         self.estado = self.EstadosAgente.ANDANDO
@@ -85,9 +98,9 @@ class AgenteBase():
             for k in range(-1, 2):
                 if (j != 0 or k != 0): #Não pegar o elemento do meio
                     posX, posY = j + self.x, k + self.y
-                    aux = ambiente.getElemento(posX, posY)
-                    if aux != None:
-                        visao.append((posX, posY, aux))    
+                    elemento = ambiente.getElemento(posX, posY)
+                    if elemento != None:
+                        visao.append((posX, posY, elemento))    
         return visao
     
     #Compara duas posições e verifica se uma está na diagonal da outra.

@@ -20,54 +20,57 @@ class AgenteDeEstados(AgenteBase):
 
     def guarda_local_recurso(self, x, y):
         self.locais_com_recurso.add((x, y))
-        print(f"\nRecursos conhecidos: {self.locais_com_recurso}")
+       # print(f"\nRecursos conhecidos: {self.locais_com_recurso}")
 
-    def movimentacao(self, visao):
+    def movimentacao(self, recursos, visao):
         maior = 0
         opcoes = []
 
         # Guardamos a posição atual antes de nos movermos
         self.ultima_posicao = (self.x, self.y)
         self.guarda_caminho()
-
-        # vai olhar apenas para locais que nao foram visitados
-        for (x, y, elementoMapa) in visao:
+        
+        lista = recursos
+        if lista == []:
+            lista = visao
+            
+        for (x, y, elementoMapa) in lista:
             valor = elementoMapa.terreno.value.valor
-
-            # para guardar o local do recurso em um conjunto assim que ve
-            if valor > 0:
-                self.guarda_local_recurso(x, y)
-
+            
             if valor > maior:
                 maior = valor
                 pos = (x, y)
             elif (x, y) not in self.locais_visitados:
                 if (self.x - x == 0 or self.y - y == 0):
                     opcoes.append((x, y))
+
         if maior != 0:
             # O recurso tá na diagonal. O agente tem que escolher entre duas opções em linha reta
             res = self.quebrarDiagonal((self.x, self.y), pos)
             if res == pos:
                 self.estado = self.EstadosAgente.COLETANDO
             return res
+        
         else:
             # se nao houver caminho novo para seguir, segue qualquer um
-            res = None
-            if opcoes:
-                res = self.escolherAleatorio(opcoes)
-
+            res = self.escolherAleatorio(opcoes)
             #  se todas já foram visitadas
             if res is None:
-                # todas as opções possíveis
                 todas_opcoes = []
                 for (x, y, _) in visao:
-                    # nao inclui a ultima posicao
-                    if (x, y) != self.ultima_posicao:
-                        todas_opcoes.append((x, y))
+                    if (self.x - x == 0 or self.y - y == 0):
+                        if (x, y) != self.ultima_posicao:
+                            todas_opcoes.append((x, y))
                 
                 res = self.escolherAleatorio(todas_opcoes)
             return res
 
+    def verificarRecursos(self, visao) -> tuple[int, int, any]:
+        recursos = super().verificarRecursos(visao)
+        for r in recursos:
+            self.guarda_local_recurso(r[0], r[1])
+        return recursos
+
     def entrouNaBase(self, carga:Carga):
         super().entrouNaBase(carga)
-        self.locais_com_recurso = self.BDI.atualizarCrencas(self.locais_com_recurso)
+        self.locais_com_recurso.update(self.BDI.atualizarCrencas(self.locais_com_recurso))

@@ -5,7 +5,7 @@ class AgenteDeObjetivos(AgenteDeEstados):
         super().__init__(simbolo, pos, bdi)
         self.objetivo:tuple[int, int] = None
 
-    def movimentacao(self, visao):
+    def movimentacao(self, recursos, visao) -> tuple[int, int]:
         if self.objetivo != None:
             res = self.irAte(self.objetivo)
             if res == (self.x, self.y):
@@ -13,7 +13,7 @@ class AgenteDeObjetivos(AgenteDeEstados):
             return res
 
         else:
-            return super().movimentacao(visao)
+            return super().movimentacao(recursos, visao)
     
     def entrouNaBase(self, carga):
         super().entrouNaBase(carga)
