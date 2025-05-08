@@ -24,9 +24,10 @@ class View():
         self.pygameDisplay = pygame.display.set_mode((self.largura, self.altura))
         pygame.display.set_caption("Planeta Desconhecido")
 
-    def exibir(self, ambiente):
+    def exibir(self, ambiente, bdi):
         self.pygameDisplay.fill((0, 0, 0))
         self.desenhar_grid(ambiente)
+        #self.desenharApenasDescobertos(ambiente, bdi)
         pygame.display.flip()
 
     def fecharTela(self):
@@ -34,6 +35,25 @@ class View():
 
     def adicionarElementoVisual(self, chave:str, color:tuple[int, int, int]):
         View.colorMap[chave] = color
+
+    def desenharApenasDescobertos(self, ambiente, bdi):
+        altura = min(self.altura // self.cellSize, ambiente.altura)
+        largura = min(self.largura // self.cellSize, ambiente.largura)
+
+        for i in range(altura):
+            for j in range(largura):
+                eleMapa = ambiente.mapa[i][j].getElemento()
+
+                if not isinstance(eleMapa, Tipo):
+                    cor = self.colorMap[eleMapa.simbolo]
+
+                elif (j, i) in bdi.recursosConhecidos:
+                    if eleMapa in self.colorMap:
+                        cor = self.colorMap[eleMapa]
+                else:
+                    cor = self.colorMap[Tipo.LIVRE]
+                pygame.draw.rect(self.pygameDisplay, cor, (j * self.cellSize, i * self.cellSize, self.cellSize, self.cellSize))  # posição
+                pygame.draw.rect(self.pygameDisplay, (200, 200, 200), (j * self.cellSize, i * self.cellSize, self.cellSize, self.cellSize), 1)  # contorno do grid
 
     def desenhar_grid(self, ambiente):
         altura = min(self.altura // self.cellSize, ambiente.altura)

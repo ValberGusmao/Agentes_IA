@@ -2,21 +2,29 @@ from enum import Enum
 import random
 from tipoTerreno import Tipo
 
+class Carga():
+    def __init__(self):
+        self.x:int
+        self.y:int
+        self.valor:int
+
 class AgenteBase():
 
     class EstadosAgente(Enum):
         ANDANDO = 1
         COLETANDO = 2
-        VOLTANDO_BASE = 3
+        VOLTANDO_BASE = 3 
 
-    def __init__(self, simbolo:str, pos:tuple[int, int]):
+    def __init__(self, simbolo:str, pos:tuple[int, int], BDI):
         super().__init__()
 
         self.estado = self.EstadosAgente.ANDANDO
         self.simbolo = simbolo
-        self.pontuacao = 0
-        self.carga = 0
         self.x, self.y = pos 
+        self.BDI = BDI
+
+        self.pontuacao = 0
+        self.carga = Carga()
     
     def explorar(self, ambiente):
         if self.estado == self.EstadosAgente.ANDANDO:
@@ -32,20 +40,17 @@ class AgenteBase():
             novaPos = self.irAte(ambiente.posBase)
             self.deslocarAgente(ambiente, novaPos)
             if novaPos == ambiente.posBase:
-                print(f"{self.simbolo} entregou recurso na base!")
-                self.pontuacao += self.carga
-                self.carga = 0
-                self.estado = self.EstadosAgente.ANDANDO
-                #teste objetivo
-                # Sincroniza conhecimento com painel BDI (apenas se for um agente mais avançado)
-                if hasattr(self, "locais_com_recurso"):
-                    self.locais_com_recurso.update(ambiente.painel_recursos)
-
-
-        else: #No estado AGURDANDO
-            pass
-        #Talvez ele poderia mandar uma mensagem pedindo ajuda aos outros agentes
+                self.entrouNaBase(self.carga)
     
+    #Os agentes Simples e com Estado estão complementando essa função com a interação com o BDI
+    def entrouNaBase(self, carga:Carga):
+        self.estado = self.EstadosAgente.ANDANDO
+        self.pontuacao += self.carga.valor
+        self.carga.valor = 0
+
+        print(f"{self.simbolo} entregou recurso na base!")        
+
+    #Os outros agentes definem essa função
     def movimentacao(self, visao) -> tuple[int, int]:
         pass
 
@@ -58,7 +63,9 @@ class AgenteBase():
         valor, tipo = ambiente.coletarRecurso(self.x, self.y)
 
         if valor > 0:
-            self.carga = valor
+            self.carga.x = self.x
+            self.carga.y = self.y
+            self.carga.valor = valor
             print("Recurso Coletado")
             self.estado = self.EstadosAgente.VOLTANDO_BASE
         elif tipo == Tipo.ESTRUTURA: #valor 0 e tipo ESTRUTURA
@@ -121,4 +128,3 @@ class AgenteBase():
     #         objetivo
     #         Estados
     #         BCI
-    

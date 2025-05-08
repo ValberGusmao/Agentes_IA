@@ -1,4 +1,4 @@
-from agenteBase import AgenteBase
+from agenteBase import AgenteBase, Carga
 
 class AgenteReativoSimples(AgenteBase):
     def movimentacao(self, visao) -> tuple[int, int]:
@@ -22,3 +22,7 @@ class AgenteReativoSimples(AgenteBase):
         else:
             res = self.escolherAleatorio(opcoes)
             return (res[0], res[1])
+        
+    def entrouNaBase(self, carga:Carga):
+        super().entrouNaBase(carga)
+        self.BDI.depositarCarga(carga)

@@ -1,4 +1,4 @@
-from agenteBase import AgenteBase
+from agenteBase import AgenteBase, Carga
 
 class AgenteDeEstados(AgenteBase):
     # Explora como o reativo simples, porem evita coordenadas ja visitadas por ele
@@ -8,8 +8,8 @@ class AgenteDeEstados(AgenteBase):
     # Quando encontra um recurso ele deve continuar seguindo por caminhos aleatorios e salvando seu caminho mas deve voltar para a base (ainda nao fiz isso)
     # Volta para base: deve pegar caminho novo para descobrir mais caminhos, quando chegar na base deve atualizar sua lista com BDI
     # BDI deve remover da lista locais_com_recursos o local que os agentes pegaram um recurso
-    def __init__(self, simbolo:str, pos:tuple[int, int]):
-        super().__init__(simbolo, pos)  
+    def __init__(self, simbolo:str, pos:tuple[int, int], BDI):
+        super().__init__(simbolo, pos, BDI)  
         self.locais_visitados = set()
         self.locais_com_recurso = set()
         self.ultima_posicao = None  # Armazena a última posição visitada
@@ -34,6 +34,7 @@ class AgenteDeEstados(AgenteBase):
         for (x, y, elementoMapa) in visao:
             valor = elementoMapa.terreno.value.valor
 
+            print(elementoMapa)
             # para guardar o local do recurso em um conjunto assim que ve
             if valor > 0:
                 self.guarda_local_recurso(x, y)
@@ -45,7 +46,7 @@ class AgenteDeEstados(AgenteBase):
             elif (x, y) not in self.locais_visitados:
                 if (self.x - x == 0 or self.y - y == 0):
                     opcoes.append((x, y))
-
+        print("---------")
         if maior != 0:
             # O recurso tá na diagonal. O agente tem que escolher entre duas opções em linha reta
             res = self.quebrarDiagonal((self.x, self.y), pos)
@@ -69,3 +70,11 @@ class AgenteDeEstados(AgenteBase):
                 
                 res = self.escolherAleatorio(todas_opcoes)
             return res
+
+    def entrouNaBase(self, carga:Carga):
+        super().entrouNaBase(carga)
+        self.BDI.depositarCarga(carga)
+        pos = (carga.x, carga.y)
+        if pos in self.locais_com_recurso:
+            self.locais_com_recurso.remove(pos)
+        self.locais_com_recurso = self.BDI.atualizarCrencas(self.locais_com_recurso)

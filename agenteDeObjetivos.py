@@ -1,8 +1,8 @@
 from agenteDeEstados import AgenteDeEstados
 
 class AgenteDeObjetivos(AgenteDeEstados):
-    def __init__(self, simbolo: str, pos: tuple[int, int]):
-        super().__init__(simbolo, pos)
+    def __init__(self, simbolo: str, pos: tuple[int, int], bdi):
+        super().__init__(simbolo, pos, bdi)
 
     def movimentacao(self, visao):
         self.guarda_caminho()

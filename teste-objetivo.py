@@ -5,6 +5,7 @@ from view import View
 from tipoTerreno import Tipo
 from ambiente import Ambiente
 from agenteDeObjetivos import AgenteDeObjetivos
+from agenteBDI import AgenteBDI
 
 
 class Simulacao:
@@ -68,8 +69,9 @@ if __name__ == "__main__":
     posBase = (ambiente.largura // 2, ambiente.altura // 2)
     ambiente.adicionarBase(posBase)
 
+    bdi = AgenteBDI()
     # Adicionando o Agente de Objetivos
-    agente = AgenteDeObjetivos("M", posBase)  # Agente de Objetivos na posição da base
+    agente = AgenteDeObjetivos("M", posBase, bdi)  # Agente de Objetivos na posição da base
     ambiente.adicionarAgente(agente)
 
     tela = View(ambiente.largura, ambiente.altura, 16)
@@ -83,7 +85,7 @@ if __name__ == "__main__":
 
     while rodando:
         rodando = simulacao.executar()
-        tela.exibir(ambiente)
+        tela.exibir(ambiente, bdi)
         clock.tick(velocidade)
 
     simulacao.tempoDeExecucao()

@@ -6,6 +6,7 @@ from tipoTerreno import Tipo
 from ambiente import Ambiente
 from agenteReativoSimples import AgenteReativoSimples
 from agenteDeEstados import AgenteDeEstados, AgenteBase
+from agenteBDI import AgenteBDI
 
 # Responsável por unir todos os elementos
 
@@ -61,14 +62,10 @@ if __name__ == "__main__":
     posBase = (ambiente.largura // 2, ambiente.altura // 2)
     ambiente.adicionarBase(posBase)
 
+    agenteBDI = AgenteBDI()
     agentes_info = [
-        #('A', AgenteReativoSimples, (34, 139, 34)),
-        #('B', AgenteReativoSimples, (139, 34, 34)),   
-        ('M', AgenteDeEstados, (128, 0, 128)), 
-        ('M', AgenteDeEstados, (128, 0, 128)), 
-        ('M', AgenteDeEstados, (128, 0, 128)), 
-        ('M', AgenteDeEstados, (128, 0, 128)), 
-        ('M', AgenteDeEstados, (128, 0, 128)), 
+        # ('A', AgenteReativoSimples, (34, 139, 34)),
+        # ('B', AgenteReativoSimples, (139, 34, 34)),   
         ('M', AgenteDeEstados, (128, 0, 128)), 
     ]
     #Adicionar múltiplos agentes
@@ -77,15 +74,15 @@ if __name__ == "__main__":
     
     agentes = []
     for simbolo, classe, cor in agentes_info:
-        agente = classe(simbolo, posBase)
+        agente = classe(simbolo, posBase, agenteBDI)
         tela.adicionarElementoVisual(agente.simbolo, cor)
         ambiente.adicionarAgente(agente)
         agentes.append(agente)
 
-    simulacao = Simulacao(ambiente, agentes, 5)
+    simulacao = Simulacao(ambiente, agentes, 5, False)
 
     clock = pygame.time.Clock()
-    velocidade = 30 #Número médio de excuções por segundo
+    velocidade = 5 #Número médio de excuções por segundo
     rodando = True
     # True inicia a exploração dos agentes de forma automática
     # False começa de forma manual
@@ -94,7 +91,7 @@ if __name__ == "__main__":
     # ESPACO Roda a exploração 1 vez quando está parado
     while rodando:
         rodando = simulacao.executar()
-        tela.exibir(ambiente)
+        tela.exibir(ambiente, agenteBDI)
         clock.tick(velocidade)  # Limita o loop para rodar a 30 frames por segundo
 
     simulacao.tempoDeExecucao()
