@@ -11,6 +11,8 @@ class Ambiente:
         self.altura = altura
         self.agentes = []
         self.posBase = None  # Armazena posição da base como tupla (x, y)
+        # testes objetivo
+        self.painel_recursos = set()
 
     def criarMapa(self, altura:int, largura:int) -> list[list[ElementoMapa]]:
         mapa = []
@@ -61,11 +63,13 @@ class Ambiente:
         else:
             raise ValueError("Está sendo adicionado mais recursos do que a quantidade de espaço disponível.")
 
-    def adicionarRecurso(self, x:int, y:int, recurso:Tipo):
+    def adicionarRecurso(self, x: int, y: int, recurso: Tipo):
         pos = self.getElemento(x, y)
-        if pos != None:
+        if pos is not None:
             pos.posicionarElemento(recurso)
             self.recursosRestantes += 1
+            #teste objetivo
+            self.painel_recursos.add((x, y))  # adiciona no painel compartilhado
         else:
             raise ValueError(f"Posição ({x}, {y}) inválida para adicionar recurso.")
 
@@ -97,3 +101,5 @@ class Ambiente:
     def printMapa(self):
         for linha in range(len(self.mapa)):
             print(" ".join(map(str, self.mapa[linha])))
+
+
