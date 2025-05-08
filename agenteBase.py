@@ -144,7 +144,7 @@ class AgenteBase():
         return None
     
     def enviarMensagem(self, conteudo):
-        self.BDI.receberMensagem(conteudo)
+        self.BDI.receberMensagemBDI(conteudo)
 
     def printMetricas(self):
         print(f"O {self.__class__.__name__} pegou {self.quantidadeRecursos} recursos e obteu a pontuação de {self.pontuacao}")
