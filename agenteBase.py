@@ -36,7 +36,12 @@ class AgenteBase():
                 self.pontuacao += self.carga
                 self.carga = 0
                 self.estado = self.EstadosAgente.ANDANDO
-    
+                #teste objetivo
+                # Sincroniza conhecimento com painel BDI (apenas se for um agente mais avançado)
+                if hasattr(self, "locais_com_recurso"):
+                    self.locais_com_recurso.update(ambiente.painel_recursos)
+
+
         else: #No estado AGURDANDO
             pass
         #Talvez ele poderia mandar uma mensagem pedindo ajuda aos outros agentes
