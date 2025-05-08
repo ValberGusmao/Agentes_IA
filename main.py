@@ -22,6 +22,20 @@ class Simulacao:
         self.tempoInicial = time.time()
         self.execucoes = 0
 
+    def agentesAvaliar(self):
+        print("------------------------------------------------------------------------")
+        simulacao.tempoDeExecucao()
+        simulacao.numeroExecucoes()
+        for a in self.agentes:
+            a.printMetricas()
+        quant = ambiente.recursosRestantes
+        if quant > 0:
+            print(f"Ainda faltam {quant} recursos para serem coletados")
+        else:
+            print("Todos os recursos foram coletados")
+        print("------------------------------------------------------------------------")
+
+
     def agentesExplorar(self):
         for a in self.agentes:
             a.explorar(self.ambiente)
@@ -31,7 +45,13 @@ class Simulacao:
         auto = self.automatico
 
         if self.ambiente.recursosRestantes <= 0:
-            return False
+            contiuar = False
+            for a in agentes:
+                if a.estado.value == 3:
+                    contiuar = True
+                    break
+            if not contiuar:
+                return contiuar
 
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -55,11 +75,11 @@ class Simulacao:
         print(f"Números de Execuções: {self.execucoes} ")
 
 if __name__ == "__main__":
-    ambiente = Ambiente(3, 3)
+    ambiente = Ambiente(10, 10)
 
-    ambiente.preencherMapa(Tipo.METAL, 0)
+    ambiente.preencherMapa(Tipo.METAL, 1)
     ambiente.preencherMapa(Tipo.CRISTAL, 0)
-    ambiente.preencherMapa(Tipo.ESTRUTURA, 1)
+    ambiente.preencherMapa(Tipo.ESTRUTURA, 0)
 
     tela = View(ambiente.largura, ambiente.altura, 16)
             
@@ -68,9 +88,10 @@ if __name__ == "__main__":
 
     agenteBDI = AgenteBDI(posBase[0], posBase[1])
     agentes_info = [
-        #('A', AgenteReativoSimples, (34, 139, 34)), # Verde
-        #('B', AgenteDeEstados, (139, 34, 34)),   #Marrom
+        ('A', AgenteReativoSimples, (34, 139, 34)), # Verde
+        ('B', AgenteDeEstados, (139, 34, 34)),   #Marrom
         ('M', AgenteDeObjetivos, (128, 0, 128)), # Roxo
+        ('C', AgenteCooperativo, (0, 200, 200)), # Ciano
     ]
     #Adicionar múltiplos agentes
     # for _ in range(1):
@@ -94,6 +115,7 @@ if __name__ == "__main__":
     # ENTER altera entre um desses modos
     # ESPACO Roda a exploração 1 vez quando está parado
 
+    print(ambiente.recursosRestantes)
     completo = True
     simulacao.completo = completo
     while rodando:
@@ -101,6 +123,5 @@ if __name__ == "__main__":
         tela.exibir(simulacao.completo, ambiente, agenteBDI)
         clock.tick(velocidade)  # Limita o loop para rodar a 30 frames por segundo
 
-    simulacao.tempoDeExecucao()
-    simulacao.numeroExecucoes()
+    simulacao.agentesAvaliar()
     tela.fecharTela()

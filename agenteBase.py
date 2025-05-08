@@ -24,6 +24,7 @@ class AgenteBase():
         self.BDI = BDI
 
         self.pontuacao = 0
+        self.quantidadeRecursos = 0
         self.carga = Carga()
     
     def explorar(self, ambiente):
@@ -58,9 +59,9 @@ class AgenteBase():
     #Os agentes Simples e com Estado estão complementando essa função com a interação com o BDI
     def entrouNaBase(self, carga:Carga):
         self.estado = self.EstadosAgente.ANDANDO
-        self.pontuacao += self.carga.valor
-        if carga.valor != 0:
-            print("DEPOSITOU")
+        if carga.valor > 0:
+            self.pontuacao += self.carga.valor
+            self.quantidadeRecursos += 1
             self.BDI.depositarCarga(carga)
         self.carga.valor = 0
 
@@ -144,6 +145,9 @@ class AgenteBase():
     
     def enviarMensagem(self, conteudo):
         self.BDI.receberMensagem(conteudo)
+
+    def printMetricas(self):
+        print(f"O {self.__class__.__name__} pegou {self.quantidadeRecursos} recursos e obteu a pontuação de {self.pontuacao}")
 
     def __str__(self):
         return self.simbolo
