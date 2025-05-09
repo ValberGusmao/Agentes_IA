@@ -8,8 +8,9 @@ class AgenteBDI():
         self.y = y
         self.recursosConhecidos: set[tuple[int, int]] = set()
         self.recursosColetado: set[tuple[int, int]] = set()
-        self.estruturasConhecidas: list[tuple[int, int]] = []
-        self.agentesCooperativos:list = []
+        # self.estruturasConhecidas: list[tuple[int, int]] = []
+        self.agentesCooperativos: list = []
+        
 
     def depositarCarga(self, carga: Carga):
         pos = (carga.x, carga.y)
@@ -43,15 +44,15 @@ class AgenteBDI():
         pass
 
     def receberMensagemBDI(self, mensagem):
-        print("sou o bdi e recebi a mensagem")
+        print("BDI: Recebi a mensagem sobre a posicao da estrutura.")
         if mensagem['tipo'] == Tipo.ESTRUTURA:
             print(f"Estrutura em {mensagem['posicao']}")
-            self.estruturasConhecidas.append(mensagem['posicao'])
-            for a in self.agentesCooperativos:
-                a.receberMensagemCoop(self.enviarMensagemBDI())
+            # aqui adiciono o local da estrutura na lista de recurso conhecidos
+            self.recursosConhecidos.add(mensagem['posicao'])
+            # for a in self.agentesCooperativos:
+            #     a.receberMensagemCoop(self.enviarMensagemBDI())
 
-    def enviarMensagemBDI(self):
-        print("enviando mensagem de estrutura")
-        local_estrutura = self.estruturasConhecidas[0]
-        # enviando a localizacao de estrutura conhecida
-        return local_estrutura
+    # def enviarMensagemBDI(self):
+    #     print("enviando mensagem de estrutura")
+    #     # enviando lista de estruturas
+    #     return self.recursosConhecidos

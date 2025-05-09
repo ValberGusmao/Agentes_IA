@@ -144,6 +144,7 @@ class AgenteBase():
         return None
     
     def enviarMensagem(self, conteudo):
+        print("Agente qualquer: enviando posicao de uma estrutura...")
         self.BDI.receberMensagemBDI(conteudo)
 
     def printMetricas(self):
