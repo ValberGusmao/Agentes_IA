@@ -71,6 +71,6 @@ class AgenteDeEstados(AgenteBase):
             self.guarda_local_recurso(r[0], r[1])
         return recursos
 
-    def entrouNaBase(self, carga:Carga):
-        super().entrouNaBase(carga)
+    def entrouNaBase(self, ambiente, carga:Carga):
+        super().entrouNaBase(ambiente, carga)
         self.locais_com_recurso.update(self.BDI.atualizarCrencas(self.locais_com_recurso))

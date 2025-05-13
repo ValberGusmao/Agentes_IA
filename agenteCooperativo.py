@@ -10,24 +10,30 @@ class AgenteCooperativo(AgenteDeObjetivos):
         bdi.agentesCooperativos.append(self)
         self.recursosConhecidos = bdi.recursosConhecidos
 
-    def definirObjetivoMaisValioso(self) -> tuple[int, int]:
+    def definirObjetivoMaisValioso(self, ambiente) -> tuple[int, int]:
         objetivo = None
-        maior_razao = float('inf')
+        maior_razao = -float('inf')
+        print(f"recursos conhecidos:{self.recursosConhecidos}")
     
         for recurso in self.recursosConhecidos:
+            print(recurso)
             distance = abs(self.x - recurso[0]) + abs(self.y - recurso[1])
-            valor = self.carga.valor # valor do recurso
+            print("distancia", distance)
+            valor = ambiente.mapa[recurso[1]][recurso[0]].terreno.value.valor # valor do recurso
+            print("valor", valor)
             razao = valor/(2*distance)
+            print(f"razao: {razao}")
 
             if razao > maior_razao:
                 maior_razao = razao
                 objetivo = recurso
+
         print("indo para objetivo escolhido", objetivo)
         return objetivo
     
-    def entrouNaBase(self, carga):
-        super().entrouNaBase(carga)
-        self.objetivo = self.definirObjetivoMaisValioso()
+    def entrouNaBase(self, ambiente, carga):
+        super().entrouNaBase(ambiente, carga)
+        self.objetivo = self.definirObjetivoMaisValioso(ambiente)
 
         
 

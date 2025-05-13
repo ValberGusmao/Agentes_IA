@@ -16,8 +16,8 @@ class AgenteDeObjetivos(AgenteDeEstados):
         else:
             return super().movimentacao(recursos, visao)
     
-    def entrouNaBase(self, carga):
-        super().entrouNaBase(carga)
+    def entrouNaBase(self, ambiente, carga):
+        super().entrouNaBase(ambiente, carga)
         self.objetivo = self.BDI.definirObjetivo()
 
     def coletar(self, ambiente):

@@ -43,7 +43,7 @@ class AgenteBase():
             novaPos = self.irAte(ambiente.posBase)
             self.deslocarAgente(ambiente, novaPos)
             if novaPos == ambiente.posBase:
-                self.entrouNaBase(self.carga)
+                self.entrouNaBase(ambiente, self.carga)
     
 
     def verificarRecursos(self, visao) -> tuple[int, int, any]:
@@ -57,7 +57,7 @@ class AgenteBase():
 
 
     #Os agentes Simples e com Estado estão complementando essa função com a interação com o BDI
-    def entrouNaBase(self, carga:Carga):
+    def entrouNaBase(self, ambiente, carga:Carga):
         self.estado = self.EstadosAgente.ANDANDO
         if carga.valor > 0:
             self.pontuacao += self.carga.valor

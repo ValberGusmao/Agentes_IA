@@ -103,8 +103,8 @@ if __name__ == "__main__":
 
     #Preencher deve vir depois de botar base, senão elas vai ficar em cima de um recurso.
     #Esse recurso vai deixar de exisitr, mas o ambiente ainda vai contabilizar
-    ambiente.preencherMapa(Tipo.METAL, 50)
-    ambiente.preencherMapa(Tipo.CRISTAL, 100)
+    ambiente.preencherMapa(Tipo.METAL, 20)
+    ambiente.preencherMapa(Tipo.CRISTAL, 50)
     ambiente.preencherMapa(Tipo.ESTRUTURA, 5)
 
     agenteBDI = AgenteBDI(posBase[0], posBase[1])
@@ -125,7 +125,7 @@ if __name__ == "__main__":
         ambiente.adicionarAgente(agente)
         agentes.append(agente)
 
-    simulacao = Simulacao(ambiente, agentes, 5, False)
+    simulacao = Simulacao(ambiente, agentes, 5, True)
 
     clock = pygame.time.Clock()
     velocidade = 10  # Número médio de execuções por segundo
