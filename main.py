@@ -9,6 +9,7 @@ from agenteDeEstados import AgenteDeEstados, AgenteBase
 from agenteDeObjetivos import AgenteDeObjetivos
 from agenteBDI import AgenteBDI
 from agenteCooperativo import AgenteCooperativo
+
 # Responsável por unir todos os elementos
 
 class Simulacao:
@@ -26,6 +27,9 @@ class Simulacao:
         print("------------------------------------------------------------------------")
         simulacao.tempoDeExecucao()
         simulacao.numeroExecucoes()
+
+        #Ordenar por maior pontuação
+        self.agentes.sort(key=lambda agente: agente.pontuacao, reverse=True)
         for a in self.agentes:
             a.printMetricas()
         quant = ambiente.recursosRestantes
@@ -34,7 +38,6 @@ class Simulacao:
         else:
             print("Todos os recursos foram coletados")
         print("------------------------------------------------------------------------")
-
 
     def agentesExplorar(self):
         for a in self.agentes:
@@ -63,6 +66,21 @@ class Simulacao:
                     self.completo = not self.completo  # ESC fecha o programa
                 if evento.key == pygame.K_SPACE and not auto:  # SPACE executa explorar uma vez no modo manual
                     self.agentesExplorar()
+                if evento.key == pygame.K_PLUS or evento.key == pygame.K_EQUALS:  # Tecla '+'
+                    tela.ajustarZoom(8)  # Aumenta o zoom em 10%
+                elif evento.key == pygame.K_MINUS:  # Tecla '-'
+                    tela.ajustarZoom(-8)  # Diminui o zoom em 10%
+        
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP]:
+            tela.moverCamera(0, -1, ambiente.largura, ambiente.altura)
+        if keys[pygame.K_DOWN]:
+            tela.moverCamera(0, 1, ambiente.largura, ambiente.altura)
+        if keys[pygame.K_LEFT]:
+            tela.moverCamera(-1, 0, ambiente.largura, ambiente.altura)
+        if keys[pygame.K_RIGHT]:
+            tela.moverCamera(1, 0, ambiente.largura, ambiente.altura)
+
         if auto:
             self.agentesExplorar()
         self.automatico = auto
@@ -75,39 +93,42 @@ class Simulacao:
         print(f"Números de Execuções: {self.execucoes} ")
 
 if __name__ == "__main__":
+    #ambiente = Ambiente(96, 170)
     ambiente = Ambiente(25, 25)
 
-    ambiente.preencherMapa(Tipo.METAL, 20)
-    ambiente.preencherMapa(Tipo.CRISTAL, 30)
-    ambiente.preencherMapa(Tipo.ESTRUTURA, 3)
-
-    tela = View(ambiente.largura, ambiente.altura, 16)
+    tela = View(800, 800, 32)
             
     posBase = (ambiente.largura // 2, ambiente.altura // 2)
     ambiente.adicionarBase(posBase)
 
+    #Preencher deve vir depois de botar base, senão elas vai ficar em cima de um recurso.
+    #Esse recurso vai deixar de exisitr, mas o ambiente ainda vai contabilizar
+    ambiente.preencherMapa(Tipo.METAL, 50)
+    ambiente.preencherMapa(Tipo.CRISTAL, 100)
+    ambiente.preencherMapa(Tipo.ESTRUTURA, 5)
+
     agenteBDI = AgenteBDI(posBase[0], posBase[1])
     agentes_info = [
-        ('A', AgenteReativoSimples, (34, 139, 34)), # Verde
-        ('B', AgenteDeEstados, (139, 34, 34)),   #Marrom
-        ('M', AgenteDeObjetivos, (128, 0, 128)), # Roxo
-        ('C', AgenteCooperativo, (0, 200, 200)), # Ciano
+        ('A', AgenteReativoSimples, "sprites/reativoSimples.png"),  
+        ('B', AgenteDeEstados, "sprites/estados.png"),       
+        ('M', AgenteDeObjetivos, "sprites/objetivos.png"),    
+        ('C', AgenteCooperativo, "sprites/cooperativo.png"),
     ]
-    #Adicionar múltiplos agentes
+    # Adicionar múltiplos agentes
     # for _ in range(1):
-    #      agentes_info.append(('M', AgenteDeEstados, (128, 0, 128)))
+    #       agentes_info.append(('M', AgenteDeEstados, "sprites/reativoSimples.png"))
     
     agentes = []
-    for simbolo, classe, cor in agentes_info:
+    for simbolo, classe, sprite_path in agentes_info:
         agente = classe(simbolo, posBase, agenteBDI)
-        tela.adicionarElementoVisual(agente.simbolo, cor)
+        tela.adicionarElementoVisual(agente.simbolo, sprite_path)
         ambiente.adicionarAgente(agente)
         agentes.append(agente)
 
     simulacao = Simulacao(ambiente, agentes, 5, False)
 
     clock = pygame.time.Clock()
-    velocidade = 10 #Número médio de excuções por segundo
+    velocidade = 10  # Número médio de execuções por segundo
     rodando = True
     # True inicia a exploração dos agentes de forma automática
     # False começa de forma manual
@@ -121,7 +142,7 @@ if __name__ == "__main__":
     while rodando:
         rodando = simulacao.executar()
         tela.exibir(simulacao.completo, ambiente, agenteBDI)
-        clock.tick(velocidade)  # Limita o loop para rodar a 30 frames por segundo
+        clock.tick()  # Limita o loop para rodar a 30 frames por segundo
 
     simulacao.agentesAvaliar()
     tela.fecharTela()

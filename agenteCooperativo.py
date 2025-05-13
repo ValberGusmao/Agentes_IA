@@ -16,7 +16,7 @@ class AgenteCooperativo(AgenteDeObjetivos):
     
         for recurso in self.recursosConhecidos:
             distance = abs(self.x - recurso[0]) + abs(self.y - recurso[1])
-            valor = self.carga # valor do recurso
+            valor = self.carga.valor # valor do recurso
             razao = valor/(2*distance)
 
             if razao > maior_razao:

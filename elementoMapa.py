@@ -35,10 +35,10 @@ class ElementoMapa():
             tipo = Tipo.LIVRE
         return (valor, tipo)
 
-    #Usado pelo view
+    #Usado pelo view. Mudado pela separação na hora de desenhar recursos e agentes
     def getElemento(self) -> "ElementoMapa":
-        if self.agentes:
-            return self.agentes[0]
+        # if self.agentes:
+            # return self.agentes[0]
         return self.terreno
 
     def __str__(self):

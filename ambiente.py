@@ -25,6 +25,7 @@ class Ambiente:
 
     def adicionarAgente(self, agente):
         pos = self.getElemento(agente.x, agente.y)
+        self.agentes.append(agente)
         if pos != None:
             pos.adicionarAgente(agente)
         else:
