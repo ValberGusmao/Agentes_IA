@@ -1,4 +1,6 @@
 from agenteDeObjetivos import AgenteDeObjetivos
+from tipoTerreno import Tipo
+
 import math
 # quando o cooperativo pisa na base ele deve receber a lista de objetivos, no entanto ele precisa fazer um calculo para ver qual o objetivo 
 # mais valioso e nao apenas seguir no mais proximo
@@ -13,29 +15,37 @@ class AgenteCooperativo(AgenteDeObjetivos):
     def definirObjetivoMaisValioso(self, ambiente) -> tuple[int, int]:
         objetivo = None
         maior_razao = -float('inf')
-        print(f"recursos conhecidos:{self.recursosConhecidos}")
+        # print(f"recursos conhecidos:{self.recursosConhecidos}")
     
         for recurso in self.recursosConhecidos:
-            print(recurso)
-            distance = abs(self.x - recurso[0]) + abs(self.y - recurso[1])
-            print("distancia", distance)
-            valor = ambiente.mapa[recurso[1]][recurso[0]].terreno.value.valor # valor do recurso
-            print("valor", valor)
-            razao = valor/(2*distance)
-            print(f"razao: {razao}")
+            ele = ambiente.mapa[recurso[1]][recurso[0]]
+            if (ele.terreno != Tipo.ESTRUTURA or len(ele.agentes) == 1):
+                # print(recurso)
+                distance = abs(self.x - recurso[0]) + abs(self.y - recurso[1])
+                # print("distancia", distance)
+                valor = ele.terreno.value.valor # valor do recurso
+                # print("valor", valor)
+                razao = valor/(2*distance)
+                # print(f"razao: {razao}")
 
-            if razao > maior_razao:
-                maior_razao = razao
-                objetivo = recurso
+                if razao > maior_razao:
+                    maior_razao = razao
+                    objetivo = recurso
 
-        print("indo para objetivo escolhido", objetivo)
+        # print("indo para objetivo escolhido", objetivo)
         return objetivo
     
     def entrouNaBase(self, ambiente, carga):
         super().entrouNaBase(ambiente, carga)
         self.objetivo = self.definirObjetivoMaisValioso(ambiente)
 
-        
+    def verAmbiente(self, ambiente):
+        res =  super().verAmbiente(ambiente)
+        for x, y, elemento in res:
+            if elemento.terreno == Tipo.ESTRUTURA:
+                res.remove((x, y, elemento))
+                self.guarda_local_recurso(x, y)
+        return res
 
     # def receberMensagemCoop(self, recursosConhecidos):
     #     print(" agente cooperativo recebendo a mensagem do bdi")

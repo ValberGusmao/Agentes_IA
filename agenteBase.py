@@ -65,7 +65,7 @@ class AgenteBase():
             self.BDI.depositarCarga(carga)
         self.carga.valor = 0
 
-        print(f"{self.simbolo} entregou recurso na base!")        
+        # print(f"{self.simbolo} entregou recurso na base!")        
 
     #Os outros agentes definem essa função
     def movimentacao(self, visao) -> tuple[int, int]:
@@ -83,10 +83,10 @@ class AgenteBase():
             self.carga.x = self.x
             self.carga.y = self.y
             self.carga.valor = valor
-            print("Recurso Coletado")
+            # print("Recurso Coletado")
             self.estado = self.EstadosAgente.VOLTANDO_BASE
         elif tipo == Tipo.ESTRUTURA: #valor 0 e tipo ESTRUTURA
-            print("Estrutura encontrada, aguardando agente auxiliar...")
+            # print("Estrutura encontrada, aguardando agente auxiliar...")
             mensagem = {
             'tipo': Tipo.ESTRUTURA,
             'posicao': (self.x, self.y),
@@ -94,7 +94,7 @@ class AgenteBase():
             self.enviarMensagem(mensagem)
 
         elif valor == 0:
-            print("Recurso não encontrado")
+            # print("Recurso não encontrado")
             self.estado = self.EstadosAgente.ANDANDO
 
         return (valor, tipo)
@@ -144,11 +144,11 @@ class AgenteBase():
         return None
     
     def enviarMensagem(self, conteudo):
-        print("Agente qualquer: enviando posicao de uma estrutura...")
+        # print("Agente qualquer: enviando posicao de uma estrutura...")
         self.BDI.receberMensagemBDI(conteudo)
 
     def printMetricas(self):
-        print(f"O {self.__class__.__name__} pegou {self.quantidadeRecursos} recursos e obteu a pontuação de {self.pontuacao}")
+        print(f"O {self.__class__.__name__} pegou {self.quantidadeRecursos} recursos e obteve a pontuação de {self.pontuacao}")
 
     def __str__(self):
         return self.simbolo

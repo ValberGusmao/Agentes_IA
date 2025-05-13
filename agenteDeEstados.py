@@ -50,19 +50,14 @@ class AgenteDeEstados(AgenteBase):
             if res == pos:
                 self.estado = self.EstadosAgente.COLETANDO
             return res
-        
         else:
             # se nao houver caminho novo para seguir, segue qualquer um
             res = self.escolherAleatorio(opcoes)
-            #  se todas já foram visitadas
+             #  se todas já foram visitadas
             if res is None:
-                todas_opcoes = []
-                for (x, y, _) in visao:
-                    if (self.x - x == 0 or self.y - y == 0):
-                        if (x, y) != self.ultima_posicao:
-                            todas_opcoes.append((x, y))
-                
-                res = self.escolherAleatorio(todas_opcoes)
+                locaisDesconhecidos = self.BDI.todoMapa.difference(self.locais_visitados)
+                proxLocal = self.escolherAleatorio(list(locaisDesconhecidos))
+                res = self.irAte(proxLocal)
             return res
 
     def verificarRecursos(self, visao) -> tuple[int, int, any]:

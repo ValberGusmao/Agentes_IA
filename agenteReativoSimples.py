@@ -1,4 +1,4 @@
-from agenteBase import AgenteBase
+from agenteBase import AgenteBase, Tipo
 
 class AgenteReativoSimples(AgenteBase):
     def movimentacao(self, recursos, visao) -> tuple[int, int]:
@@ -27,3 +27,10 @@ class AgenteReativoSimples(AgenteBase):
         else:
             res = self.escolherAleatorio(opcoes)
             return (res[0], res[1])
+
+    def verAmbiente(self, ambiente):
+        res =  super().verAmbiente(ambiente)
+        for x, y, elemento in res:
+            if elemento.terreno == Tipo.ESTRUTURA:
+                res.remove((x, y, elemento))
+        return res

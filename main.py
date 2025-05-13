@@ -107,7 +107,7 @@ if __name__ == "__main__":
     ambiente.preencherMapa(Tipo.CRISTAL, 50)
     ambiente.preencherMapa(Tipo.ESTRUTURA, 5)
 
-    agenteBDI = AgenteBDI(posBase[0], posBase[1])
+    agenteBDI = AgenteBDI(posBase[0], posBase[1], ambiente.largura, ambiente.altura)
     agentes_info = [
         ('A', AgenteReativoSimples, "sprites/reativoSimples.png"),  
         ('B', AgenteDeEstados, "sprites/estados.png"),       
@@ -128,7 +128,7 @@ if __name__ == "__main__":
     simulacao = Simulacao(ambiente, agentes, 5, True)
 
     clock = pygame.time.Clock()
-    velocidade = 10  # Número médio de execuções por segundo
+    velocidade = 20  # Número médio de execuções por segundo
     rodando = True
     # True inicia a exploração dos agentes de forma automática
     # False começa de forma manual
@@ -142,7 +142,7 @@ if __name__ == "__main__":
     while rodando:
         rodando = simulacao.executar()
         tela.exibir(simulacao.completo, ambiente, agenteBDI)
-        clock.tick()  # Limita o loop para rodar a 30 frames por segundo
+        clock.tick(velocidade)  # Limita o loop para rodar a 30 frames por segundo
 
     simulacao.agentesAvaliar()
     tela.fecharTela()
